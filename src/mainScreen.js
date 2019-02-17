@@ -12,7 +12,7 @@ class ControlBar extends React.Component {
 		console.log(this.props);
 		return (<View style={mainScreenStyles.controlBar}>
 			<TouchableOpacity onPress={this.props.onAddMatch} style={mainScreenStyles.controlBarButton}>
-				<Text style={{ color: styles.colors.highlight.text, fontSize: 18 }}>
+				<Text style={{ color: styles.colors.highlight.text, ...styles.font.standardText }}>
 					Add new match
 				</Text>
 			</TouchableOpacity>
@@ -21,7 +21,7 @@ class ControlBar extends React.Component {
 				backgroundColor: styles.colors.secondary.bg,
 				flexGrow: 0.75
 			}}>
-				<Text style={{ color: styles.colors.secondary.text, fontSize: 18 }}>
+				<Text style={{ color: styles.colors.secondary.text, ...styles.font.standardText }}>
 					View QR code
 				</Text>
 			</TouchableOpacity>)
@@ -30,47 +30,70 @@ class ControlBar extends React.Component {
 	}
 }
 
-const pages = {HOMESCREEN: 1, ADDNEWMATCH: 2}
+const pages = {HOMESCREEN: 1, ADDNEWMATCH: 2, DATAINPUT: 3}
 export default class MainScreen extends React.Component {
 	state = {
 		qrCodeExists: true,
 		matches: [],
-		currentWindow: pages.HOMESCREEN
+		currentWindow: pages.HOMESCREEN,
+		matches: []
+	}
+	modalCanceled() {
+		this.setState({ currentWindow: pages.HOMESCREEN });
+	}
+	createMatch(teamNumber, matchNumber) {
+		this.setState({ currentWindow: pages.DATAINPUT });
+		console.log(teamNumber, matchNumber);
+		let newMatches = this.state.matches;
+		newMatches.push({ teamNumber, matchNumber });
+		this.setState({ matches: newMatches });
 	}
 	render() {
 		const self = this;
 		return (
 			<View style={mainScreenStyles.mainScreen}>
 				<View style={{
-					flex: 1,
+					flex: 0.25,
 					flexDirection: "row",
-					flexGrow: 0.25,
-					justifySelf: "start",
-					justifyContent: "center",
-					alignItems:"center"
+					...styles.align.center
 				}}>
-					<Text style={{fontSize: 24}}>Matches</Text>
+					<Text style={styles.font.header}>Matches</Text>
 				</View>
+				
+				{/* Display the popup when adding a new match */}
 				{this.state.currentWindow == pages.ADDNEWMATCH ? 
 					<View style={{
 						flex: 1,
 						position: "absolute",
 						width: "100%",
 						height: "75%",
-						alignItems: "center",
-						justifyContent: "center"
-					}}><AddMatchPopup></AddMatchPopup></View>
+						zIndex: 100,
+						...styles.align.center
+					}}><AddMatchPopup onCancel={() => this.modalCanceled()} onSubmit={(team, match) => this.createMatch(team, match)}></AddMatchPopup></View>
 					: null}
+				
+
 				<View style={{
 					flex: 1,
 					flexDirection: "row",
-					alignSelf: "flex-end",
-					flexGrow: 1
 				}}>
 					<ControlBar qrCodeExists={self.state.qrCodeExists} onAddMatch={
 						(() => this.setState({ currentWindow: pages.ADDNEWMATCH })).bind(this)
 						}></ControlBar>
 				</View>
+
+				{/* Create a grey cover for everything behind the popup when adding a new match */}
+				{this.state.currentWindow == pages.ADDNEWMATCH ?
+					<View style={{
+						width: "125%",
+						height: "125%",
+						position: 'absolute',
+						zIndex: 10,
+						backgroundColor: "#000000",
+						opacity: 0.5
+					}}>
+					</View> : null
+				}
 			</View>
 		);
 	}
@@ -94,6 +117,7 @@ const mainScreenStyles = {
 		alignItems: "center",
 		flexDirection: "column",
 		height: 130,
+		zIndex: 1,
 		width: "100%"
 	},
 	controlBarButton: {
