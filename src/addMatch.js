@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import styles from './styles'
 import * as inputs from './inputs.js'
 
-const addMatchStyles = {
+export const addMatchStyles = {
 	mainPopup: {
 		...styles.shadow,
 		flex: 1,
@@ -78,13 +78,13 @@ export default class AddMatchPopup extends React.Component {
 				</View>
 				{/* Actual data entry */}
 				<View style={addMatchStyles.inputs}>
-					{/* Team number */}
-					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={addMatchStyles.numberInput} label="Enter a team number">
-						<inputs.NumberInput onValueChange={(newTeamNumber)=>this.setState({teamNumber: newTeamNumber})}></inputs.NumberInput>
-					</inputs.LabeledInput>
 					{/* Match number */}
 					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={addMatchStyles.numberInput} label="Enter a match number">
 						<inputs.NumberInput onValueChange={(newMatchNumber) => this.setState({ matchNumber: newMatchNumber })}></inputs.NumberInput>
+					</inputs.LabeledInput>
+					{/* Team number */}
+					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={addMatchStyles.numberInput} label="Enter a team number">
+						<inputs.NumberInput onValueChange={(newTeamNumber)=>this.setState({teamNumber: newTeamNumber})}></inputs.NumberInput>
 					</inputs.LabeledInput>
 				</View>
 				{/* Submit and cancel buttons */}
