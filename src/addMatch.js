@@ -54,7 +54,8 @@ export const addMatchStyles = {
 	buttonText: {
 		flex: 1,
 		...styles.font.navButton,
-		...styles.align.center
+		...styles.align.center,
+		color: styles.colors.highlight.bg
 	},
 	numberInput: {
 		marginVertical: "10%"
