@@ -1,13 +1,18 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MainScreen from './src/mainScreen'
+import { MenuProvider, Menu } from 'react-native-popup-menu';
+
+console.reportErrorsAsExceptions = false;
 
 export default class App extends React.Component {
 	render() {
 		return (
-			<View style={styles.container}>
-				<MainScreen></MainScreen>
-			</View>
+			<MenuProvider>
+				<View style={styles.container}>
+					<MainScreen></MainScreen>
+				</View>
+			</MenuProvider>
 		);
 	}
 }
