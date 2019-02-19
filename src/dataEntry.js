@@ -26,7 +26,8 @@ const dataEntryStyles = {
 	buttonText: {
 		...styles.font.standardText,
 		width: "100%",
-		textAlign: "left"
+		textAlign: "left",
+		color: styles.colors.highlight.bg
 	},
 	controlBarButton: {
 		flexGrow: 1,
