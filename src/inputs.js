@@ -1,6 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import styles from './styles'
+import {
+	Menu,
+	MenuOptions,
+	MenuOption,
+	MenuTrigger,
+	MenuProvider
+} from 'react-native-popup-menu';
+
 
 export class NumberInput extends React.Component {
 	state = {
@@ -27,10 +35,32 @@ export class NumberInput extends React.Component {
 				style={[this.props.style, styles.inputs.inputBox]}
 				keyboardType='numeric'
 				onChangeText={(text) => this.onChanged(text)}
-				value={this.state.value.toString()}
+				value={this.props.value ? this.props.value.toString() : this.state.value.toString()}
 				maxLength={this.props.maxLength}  //setting limit of input
+				returnKeyType='done' 
 			/>
 		)
+	}
+}
+
+
+export class PickerInput extends React.Component{
+	render() {
+		let current = 0;
+		return (
+			<Menu onSelect={this.props.onValueChange}>
+				<MenuTrigger text={this.props.value} style={[{
+					backgroundColor: styles.colors.secondary.bg,
+					padding: 10
+				}, this.props.style]} />
+				<MenuOptions>
+					{this.props.options ? 
+						this.props.options.map((v) =>
+							<MenuOption style={[{ padding: 10 }, this.props.textStyle]} key={current++} value={v} text={v}></MenuOption>
+						)
+						: null}
+				</MenuOptions>
+			</Menu>)
 	}
 }
 
