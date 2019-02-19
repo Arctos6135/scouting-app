@@ -5,12 +5,20 @@ export default styles = {
 			text: "#100E0C"
 		},
 		secondary: {
-			bg: "#cccccc",
+			bg: "#d0d0d0",
 			text: "#000000"
+		},
+		tertiary: {
+			bg: "#eeeeee",
+			text: "#000000"
+		},
+		dangerous: {
+			bg: "#ffffff",
+			text: "#aa0000"
 		}
 	},
 	shadow: {
-		shadowColor: '#000000',
+		shadowColor: '#aaaaaa',
 		shadowOffset: {
 			width: 0,
 			height: 3
@@ -31,13 +39,17 @@ export default styles = {
 		},
 		navButton: {
 			fontSize: 18
+		},
+		matchInfo: {
+			fontSize: 24
 		}
 	},
 	align: {
 		center: {
 			textAlign: "center",
 			justifyContent: "center",
-			alignItems: "center"
+			alignItems: "center",
+			width:"100%"
 		}
 	},
 	inputs: {
@@ -46,6 +58,7 @@ export default styles = {
 			borderRadius: 0,
 			borderWidth: 0.5,
 			borderColor: '#d6d7da',
+			padding: 10
 		}
 	}
 }
