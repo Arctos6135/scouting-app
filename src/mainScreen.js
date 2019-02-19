@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import styles from './styles'
 import AddMatchPopup from './addMatch';
+import DataEntry from './dataEntry';
+import MatchList from './listMatches';
 
 class ControlBar extends React.Component {
 	constructor(props) {
@@ -30,38 +32,81 @@ class ControlBar extends React.Component {
 	}
 }
 
-const pages = {HOMESCREEN: 1, ADDNEWMATCH: 2, DATAINPUT: 3}
+const pages = {homeScreen: 1, addNewMatch: 2, dataInput: 3}
 export default class MainScreen extends React.Component {
 	state = {
 		qrCodeExists: true,
-		matches: [],
-		currentWindow: pages.HOMESCREEN,
-		matches: []
+		
+		// COMMENTED OUT FOR DEBUGGING
+		currentWindow: pages.homeScreen,
+		//matches: [],
+		dataEntryIndex: -1,
+		
+		/*
+		//DEBUGGING ONLY, STARTS IN EDITOR
+		currentWindow: pages.dataInput,
+		dataEntryIndex: 0,
+		*/
+		matches: [{ teamNumber: 6135, matchNumber: 938 }]
 	}
 	modalCanceled() {
-		this.setState({ currentWindow: pages.HOMESCREEN });
+		this.setState({ currentWindow: pages.homeScreen });
 	}
 	createMatch(teamNumber, matchNumber) {
-		this.setState({ currentWindow: pages.DATAINPUT });
+		this.setState({ currentWindow: pages.dataInput });
 		console.log(teamNumber, matchNumber);
 		let newMatches = this.state.matches;
 		newMatches.push({ teamNumber, matchNumber });
+		this.setState({ matches: newMatches, dataEntryIndex: newMatches.length - 1 });
+	}
+	dataChange(match) {
+		let newMatches = this.state.matches;
+		newMatches[this.state.dataEntryIndex] = match;
 		this.setState({ matches: newMatches });
 	}
 	render() {
 		const self = this;
+		if (this.state.currentWindow == pages.dataInput) {
+			return (
+				<View style={mainScreenStyles.mainScreen}>
+					<DataEntry
+						return={() => this.setState({ currentWindow: pages.homeScreen })}
+						delete={() => {
+							let newMatches = this.state.matches;
+							newMatches.splice(this.state.dataEntryIndex, 1);
+							this.setState({ matches: newMatches });
+						}}
+						data={this.state.matches[this.state.dataEntryIndex]}
+						onDataChange={(match) => this.dataChange(match)}></DataEntry>
+				</View>
+			)
+		}
 		return (
 			<View style={mainScreenStyles.mainScreen}>
 				<View style={{
 					flex: 0.25,
 					flexDirection: "row",
-					...styles.align.center
+					...styles.align.center,
+					minHeight: 60
 				}}>
 					<Text style={styles.font.header}>Matches</Text>
 				</View>
-				
+				<View style={{
+					flex: 4,
+					width: "100%",
+					height: "100%",
+					overflow: "scroll"
+				}}>
+					<ScrollView>
+						{/*                Whatever it takes                */}
+						<MatchList onPress={(index) => {
+							this.setState({dataEntryIndex: index, currentWindow: pages.dataInput})
+						}} touchable = { true} style = {{ zIndex: 1000000 }
+						} matches={this.state.matches}></MatchList>
+					</ScrollView>
+				</View>
 				{/* Display the popup when adding a new match */}
-				{this.state.currentWindow == pages.ADDNEWMATCH ? 
+				{this.state.currentWindow == pages.addNewMatch ? 
 					<View style={{
 						flex: 1,
 						position: "absolute",
@@ -71,19 +116,20 @@ export default class MainScreen extends React.Component {
 						...styles.align.center
 					}}><AddMatchPopup onCancel={() => this.modalCanceled()} onSubmit={(team, match) => this.createMatch(team, match)}></AddMatchPopup></View>
 					: null}
-				
+
+				<View style={{ flex: 0.75 }}></View>
 
 				<View style={{
 					flex: 1,
-					flexDirection: "row",
+					flexDirection: "row"
 				}}>
 					<ControlBar qrCodeExists={self.state.qrCodeExists} onAddMatch={
-						(() => this.setState({ currentWindow: pages.ADDNEWMATCH })).bind(this)
+						(() => this.setState({ currentWindow: pages.addNewMatch })).bind(this)
 						}></ControlBar>
 				</View>
 
 				{/* Create a grey cover for everything behind the popup when adding a new match */}
-				{this.state.currentWindow == pages.ADDNEWMATCH ?
+				{this.state.currentWindow == pages.addNewMatch ?
 					<View style={{
 						width: "125%",
 						height: "125%",
@@ -105,7 +151,8 @@ const mainScreenStyles = {
 		resizeMode: "cover",
 		justifyContent: "center",
 		alignItems: "center",
-		padding: 20,
+		paddingVertical: 20,
+		paddingHorizontal: 5,
 		width: "100%",
 		height: "100%",
 		flexDirection: "column"
