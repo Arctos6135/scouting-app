@@ -4,6 +4,10 @@ export default styles = {
 			bg: "#78D3E1",
 			text: "#100E0C"
 		},
+		arctos: {
+			bg: "#0F172F",
+			text: "#FFFFFF"
+		},
 		secondary: {
 			bg: "#d0d0d0",
 			text: "#000000"
@@ -34,6 +38,9 @@ export default styles = {
 		header: {
 			fontSize: 24
 		},
+		subHeader: {
+			fontSize: 18
+		},
 		inputHeader: {
 			fontSize: 18
 		},
@@ -42,6 +49,9 @@ export default styles = {
 		},
 		matchInfo: {
 			fontSize: 24
+		},
+		dataEntry: {
+			fontSize: 14
 		}
 	},
 	align: {
