@@ -8,10 +8,10 @@ import MatchList from './listMatches';
 class ControlBar extends React.Component {
 	constructor(props) {
 		super(props);
-		console.log(this.props);
+		//console.log(this.props);
 	}
 	render() {
-		console.log(this.props);
+		//console.log(this.props);
 		return (<View style={mainScreenStyles.controlBar}>
 			<TouchableOpacity onPress={this.props.onAddMatch} style={mainScreenStyles.controlBarButton}>
 				<Text style={{ color: styles.colors.highlight.text, ...styles.font.standardText }}>
@@ -54,7 +54,7 @@ export default class MainScreen extends React.Component {
 	}
 	createMatch(teamNumber, matchNumber) {
 		this.setState({ currentWindow: pages.dataInput });
-		console.log(teamNumber, matchNumber);
+		//console.log(teamNumber, matchNumber);
 		let newMatches = this.state.matches;
 		newMatches.push({ teamNumber, matchNumber });
 		this.setState({ matches: newMatches, dataEntryIndex: newMatches.length - 1 });
@@ -87,7 +87,8 @@ export default class MainScreen extends React.Component {
 					flex: 0.25,
 					flexDirection: "row",
 					...styles.align.center,
-					minHeight: 60
+					minHeight: 60,
+					marginBottom: 20
 				}}>
 					<Text style={styles.font.header}>Matches</Text>
 				</View>
@@ -97,6 +98,7 @@ export default class MainScreen extends React.Component {
 					height: "100%",
 					overflow: "scroll"
 				}}>
+					
 					<ScrollView>
 						{/*                Whatever it takes                */}
 						<MatchList onPress={(index) => {

@@ -9,7 +9,7 @@ export default class MatchList extends React.Component {
 		
 		let matches = [];
 		for (let i in this.props.matches) {
-			console.log(this.props.matches[i]);
+			//console.log(this.props.matches[i]);
 			matches.push(
 				<TouchableOpacity key={i} disabled={!this.props.touchable}
 					onPress={() => {
@@ -21,14 +21,14 @@ export default class MatchList extends React.Component {
 				>
 					<View style={{
 						flexDirection: "row",
-						justifyContent: "center"
+						justifyContent: "space-between"
 					}}>	
 						<View style={{ flex: 1 }}>
-							<Text style={{ flex: 1, textAlign: "center", ...styles.font.matchInfo }}>{this.props.matches[i].matchNumber}</Text>
+							<Text style={{ flex: 1, textAlign: "right", ...styles.font.matchInfo }}>{this.props.matches[i].matchNumber}</Text>
 						</View>
 						<View style={{ flex: 0.3 }}></View>
 						<View style={{flex: 1}}>
-							<Text style={{ flex: 1, textAlign: "center", ...styles.font.matchInfo }}>{this.props.matches[i].teamNumber}</Text>
+							<Text style={{ flex: 1, textAlign: "left", ...styles.font.matchInfo }}>{this.props.matches[i].teamNumber}</Text>
 						</View>
 						
 					</View>
@@ -41,16 +41,17 @@ export default class MatchList extends React.Component {
 		}, this.props.style]}>
 			<View style={{
 				flexDirection: "row",
-				justifyContent: "center"
+				justifyContent: "space-between"
 			}}>
 				<View style={{ flex: 1 }}>
-					<Text style={{ flex: 1, textAlign: "center" }}>Match number</Text>
+					<Text style={{ flex: 1, textAlign: "right" }}>Match number</Text>
 				</View>
-				<View style={{ flex: 0.1 }}></View>
+				<View style={{ flex: 0.3 }}></View>
 				<View style={{ flex: 1 }}>
-					<Text style={{ flex: 1, textAlign: "center" }}>Team number</Text>
+					<Text style={{ flex: 1, textAlign: "left" }}>Team number</Text>
 				</View>
 			</View>
+			<View style={{ height: 8 }}></View>
 			{matches}
 		</View>
 	}

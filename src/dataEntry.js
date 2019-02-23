@@ -1,9 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import styles from './styles'
 import * as inputs from './inputs'
 import MatchList from './listMatches'
 import { addMatchStyles } from './addMatch'
+
+const headingPadding = 50;
 
 const dataEntryStyles = {
 	header: {
@@ -58,6 +60,17 @@ const dataNames = {
 	climbing: {
 		levelReached: "climblvlReached",
 		assist: "assist"
+	},
+	attributes: {
+		broken: "broken",
+		tip: "tip",
+		cargoFromDepot: "depot",
+		hatchesFromFloor: "floor"
+	},
+	gameInfo: {
+		opposingSideTime: "opposide",
+		penaltyPoints: "ppoints",
+		hatchesDropped: "hdropped"
 	}
 }
 
@@ -86,6 +99,29 @@ const gamePieceOptions = [
 const defaultGamePieceOption = 0;
 
 export default class DataEntry extends React.Component {
+	state = {
+		dead: false
+	}
+	Toggle = (props) => <Row style={{marginBottom: 10}}>
+		<inputs.LabeledInput textStyle={styles.font.dataEntry} label={props.label} style={dataEntryStyles.gamePieceInput}>
+			<inputs.ToggleInput
+				onValueChange={(selected) =>
+					this.dataUpdated(selected, props.variable)}
+				activeText={"Yes"}
+				inactiveText={"No"}
+				value={this.props.data[props.variable]}></inputs.ToggleInput>
+		</inputs.LabeledInput>
+	</Row>
+
+	Timer = (props) => <Row style={{ marginBottom: 10 }}>
+		<inputs.LabeledInput textStyle={styles.font.dataEntry} label={props.label} style={dataEntryStyles.gamePieceInput}>
+			<inputs.TimerInput
+				onValueChange={(selected) =>
+					this.dataUpdated(selected, props.variable)}
+				value={this.props.data[props.variable]}></inputs.TimerInput>
+		</inputs.LabeledInput>
+	</Row>
+		
 	constructor(props) {
 		super(props);
 		let newData = {
@@ -97,13 +133,21 @@ export default class DataEntry extends React.Component {
 			if (!newData[dataNames.hatch[i]]) newData[dataNames.hatch[i]] = gamePieceOptions[defaultGamePieceOption];
 		}
 
-		for (let i in dataNames.rocket) {
-			if (!newData[dataNames.rocket[i]]) newData[dataNames.rocket[i]] = 0;
+		for (let i in dataNames.rocketHatch) {
+			if (!newData[dataNames.rocketHatch[i]]) newData[dataNames.rocketHatch[i]] = 0;
+			if (!newData[dataNames.rocketCargo[i]]) newData[dataNames.rocketCargo[i]] = 0;
 		}
 
 		if (!newData[dataNames.climbing.levelReached]) newData[dataNames.climbing.levelReached] = climbOptions[defaultClimbOption];
 		if (!newData[dataNames.climbing.assist]) newData[dataNames.climbing.assist] = assistOptions[defaultAssistOption];
 
+		for (let attribute in dataNames.attributes) {
+			if (!newData[dataNames.attributes[attribute]]) newData[dataNames.attributes[attribute]] = false;
+		}
+
+		for (let gameInfo in dataNames.gameInfo) {
+			if (!newData[dataNames.gameInfo[gameInfo]]) newData[dataNames.gameInfo[gameInfo]] = 0;
+		}
 
 		this.props.onDataChange(newData);
 		this.originalValue = this.props.data;
@@ -122,12 +166,31 @@ export default class DataEntry extends React.Component {
 	onDone() {
 		this.props.return();
 	}
+	runDeleteMessage() {
+		const self = this;
+		Alert.alert("Are you sure?",
+			"Deleting a match cannot be undone.",
+			[
+				{
+					text: 'Cancel',
+					style: 'cancel',
+				},
+				{
+					text: "Yes", onPress: () => {
+						self.delete();
+					}
+				}
+			],
+			{ cancelable: true });
+	}
 	delete() {
+		this.setState({ dead: true });
 		this.props.delete();
 		this.props.return();
 	}
 	render() {
-		console.log(this.props.data);
+		if (this.state.dead) return <View></View>
+		//console.log(this.props.data);
 		let sandstormRockets = [];
 		for (let i = 0; i < dataNames.cargo.length; i++) {
 			sandstormRockets.push(<Row key={i}>
@@ -236,7 +299,7 @@ export default class DataEntry extends React.Component {
 				<Row>
 					<MatchList matches={[this.props.data]}></MatchList>
 				</Row>
-				<View style={{ height: 30 }}></View>
+				<View style={{ height: headingPadding }}></View>
 				{/* Sandstorm phase */}
 				<Row>
 					<Text style={dataEntryStyles.header}>
@@ -245,28 +308,60 @@ export default class DataEntry extends React.Component {
 				</Row>
 				{sandstormRockets}
 
-				<Row style={{paddingTop: 20}}>
+				<Row style={{ paddingTop: headingPadding}}>
 					<Text style={dataEntryStyles.header}>
 						Tele-op
 					</Text>
 				</Row>
 				{teleopRockets}
 
-				<Row style={{ paddingTop: 20 }}>
+				<Row style={{ paddingTop: headingPadding }}>
 					<Text style={dataEntryStyles.header}>
 						Climbing
 					</Text>
 				</Row>
 				{climbing}
 
+				<Row style={{ paddingTop: headingPadding }}>
+					<Text style={dataEntryStyles.header}>
+						Attributes
+					</Text>
+				</Row>
+				<this.Toggle label="Did the robot break?" variable={dataNames.attributes.broken}></this.Toggle>
+				<this.Toggle label="Did the robot tip?" variable={dataNames.attributes.tip}></this.Toggle>
+				<this.Toggle label="Can the robot pick up cargo from the depot?" variable={dataNames.attributes.cargoFromDepot}></this.Toggle>
+				<this.Toggle label="Can it pick up hatches from the floor?" variable={dataNames.attributes.hatchesFromFloor}></this.Toggle>
+				
+				<Row>
+					<inputs.LabeledInput textStyle={styles.font.dataEntry} label={"Time spent on opponents side of field"} style={dataEntryStyles.gamePieceInput}>
+						<inputs.TimeInput value={this.props.data[dataNames.gameInfo.opposingSideTime]} onValueChange={(value) => this.dataUpdated(value, dataNames.gameInfo.opposingSideTime)}>
+						</inputs.TimeInput>
+					</inputs.LabeledInput>
+				</Row>
+
+				<Row>
+					<inputs.LabeledInput textStyle={styles.font.dataEntry} label={"Total penalty points earned by alliance"} style={dataEntryStyles.gamePieceInput}>
+						<inputs.ClickerInput value={this.props.data[dataNames.gameInfo.penaltyPoints]} onValueChange={(value) => this.dataUpdated(value, dataNames.gameInfo.penaltyPoints)}>
+						</inputs.ClickerInput>
+					</inputs.LabeledInput>
+				</Row>
+
+				<Row>
+					<inputs.LabeledInput textStyle={styles.font.dataEntry} label={"Number of hatches dropped"} style={dataEntryStyles.gamePieceInput}>
+						<inputs.ClickerInput value={this.props.data[dataNames.gameInfo.hatchesDropped]} onValueChange={(value) => this.dataUpdated(value, dataNames.gameInfo.hatchesDropped)}>
+						</inputs.ClickerInput>
+					</inputs.LabeledInput>
+				</Row>
+
 				<View style={{ height: 50 }}></View>
 				<Row>
-					<TouchableOpacity onPress={() => { this.delete() }} style={dataEntryStyles.controlBarButton}>
+					<TouchableOpacity onPress={() => { this.runDeleteMessage() }} style={dataEntryStyles.controlBarButton}>
 						<Text style={{ color: styles.colors.dangerous.text, ...styles.font.standardText }}>
 							Delete Match
 						</Text>
 					</TouchableOpacity>
 				</Row>
+				<View style={{ height: 150 }}></View>
 			</ScrollView>
 		</View>)
 	}
