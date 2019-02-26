@@ -33,16 +33,12 @@ export class NumberInput extends React.Component {
 			if (numbers.indexOf(text[i]) > -1) {
 				newText += text[i];
 			}
-			else {
-				console.log(text[i], "invalid character, not in", numbers)
-			}
 		}
-		console.log(numbers, text, newText);
 		this.setState({ rawNumber: newText })
 	}
 	getDisplayValue() {
 		let output;
-		console.log(this.state.rawNumber);
+		if (this.props.allowEmpty && this.state.rawNumber == 0) return "";
 		if (this.state.rawNumber != null && this.state.editing) return this.state.rawNumber;
 		if (typeof this.props.value == "number") {
 			output = this.props.value.toFixed(1);
@@ -62,7 +58,6 @@ export class NumberInput extends React.Component {
 		else {
 			output = this.state.value
 		}
-		console.log(output);
 		if (output == "" || output == "NaN" || output == "0.0") return "0";
 		else return output;
 	}
@@ -152,6 +147,9 @@ export class TimeInput extends React.Component {
 		super(props);
 		this.state.value = props.value;
 	}
+	componentWillUnmount() {
+		if (this.timer != null) clearImmediate(this.timer);
+	}
 	onChanged(value) {
 		if (this.props.onValueChange && !this.state.running) {
 			this.setState({ value: value });
@@ -173,10 +171,8 @@ export class TimeInput extends React.Component {
 		else {
 			clearInterval(this.timer);
 			if (this.props.onValueChange) {
-				console.log("value change")
 				this.props.onValueChange(this.state.value);
 			}
-			console.log(this.state.value, this.props.value)
 		}
 	}
 	timeSet(amount) {
@@ -225,7 +221,6 @@ export class ClickerInput extends React.Component {
 		if (this.props.onValueChange) this.props.onValueChange(this.props.value + 1);
 	}
 	render() {
-		console.log(this.props.value)
 		return <View style={[{ flexDirection: "row", alignItems: "stretch" }, this.props.style]}>
 			<TouchableOpacity
 				hitSlop={{ top: 20, bottom: 20, left: 0, right: 0 }}

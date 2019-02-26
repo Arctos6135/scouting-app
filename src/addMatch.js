@@ -81,11 +81,11 @@ export default class AddMatchPopup extends React.Component {
 				<View style={addMatchStyles.inputs}>
 					{/* Match number */}
 					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={addMatchStyles.numberInput} label="Enter a match number">
-						<inputs.NumberInput onValueChange={(newMatchNumber) => this.setState({ matchNumber: newMatchNumber })}></inputs.NumberInput>
+						<inputs.NumberInput allowEmpty onValueChange={(newMatchNumber) => this.setState({ matchNumber: newMatchNumber })}></inputs.NumberInput>
 					</inputs.LabeledInput>
 					{/* Team number */}
 					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={addMatchStyles.numberInput} label="Enter a team number">
-						<inputs.NumberInput onValueChange={(newTeamNumber)=>this.setState({teamNumber: newTeamNumber})}></inputs.NumberInput>
+						<inputs.NumberInput allowEmpty onValueChange={(newTeamNumber)=>this.setState({teamNumber: newTeamNumber})}></inputs.NumberInput>
 					</inputs.LabeledInput>
 				</View>
 				{/* Submit and cancel buttons */}

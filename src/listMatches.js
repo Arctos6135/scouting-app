@@ -9,7 +9,6 @@ export default class MatchList extends React.Component {
 		
 		let matches = [];
 		for (let i in this.props.matches) {
-			//console.log(this.props.matches[i]);
 			matches.push(
 				<TouchableOpacity key={i} disabled={!this.props.touchable}
 					onPress={() => {

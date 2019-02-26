@@ -4,6 +4,7 @@ import styles from './styles'
 import * as inputs from './inputs'
 import MatchList from './listMatches'
 import { addMatchStyles } from './addMatch'
+import { dataNames, dataTypes, assistOptions, gamePieceOptions, climbOptions, defaultAssistOption, defaultClimbOption, defaultGamePieceOption } from './dataMap'
 
 const headingPadding = 50;
 
@@ -51,52 +52,6 @@ const Row = (props) =>
 	}, props.style]}>{props.children}
 	</View>);
 const Spacer = (props) => (<View style={{ flex: 0.1 }}></View>);
-
-const dataNames = {
-	cargo: ["cargo1", "cargo2", "cargo3", "cargo4"],
-	hatch: ["hatch1", "hatch2", "hatch3", "hatch4"],
-	rocketCargo: ["rock1c", "rock2c", "rock3c", "rock4c"],
-	rocketHatch: ["rock1h", "rock2h", "rock3h", "rock4h"],
-	climbing: {
-		levelReached: "climblvlReached",
-		assist: "assist"
-	},
-	attributes: {
-		broken: "broken",
-		tip: "tip",
-		cargoFromDepot: "depot",
-		hatchesFromFloor: "floor"
-	},
-	gameInfo: {
-		opposingSideTime: "opposide",
-		penaltyPoints: "ppoints",
-		hatchesDropped: "hdropped"
-	}
-}
-
-const climbOptions = [
-	"No climb",
-	"Level 1",
-	"Level 2",
-	"Level 3"
-]
-const defaultClimbOption = 0;
-
-const assistOptions = [
-	"No assist",
-	"Level 2",
-	"Level 3"
-]
-const defaultAssistOption = 0;
-
-const gamePieceOptions = [
-	"None",
-	"Rocket 1",
-	"Rocket 2",
-	"Rocket 3",
-	"Rocket 4"
-]
-const defaultGamePieceOption = 0;
 
 export default class DataEntry extends React.Component {
 	state = {

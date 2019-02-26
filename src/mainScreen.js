@@ -4,35 +4,40 @@ import styles from './styles'
 import AddMatchPopup from './addMatch';
 import DataEntry from './dataEntry';
 import MatchList from './listMatches';
+import QRCodeGenerator from './qrCode';
+import { SecureStore } from 'expo';
 
 class ControlBar extends React.Component {
 	constructor(props) {
 		super(props);
-		//console.log(this.props);
 	}
 	render() {
-		//console.log(this.props);
 		return (<View style={mainScreenStyles.controlBar}>
 			<TouchableOpacity onPress={this.props.onAddMatch} style={mainScreenStyles.controlBarButton}>
 				<Text style={{ color: styles.colors.highlight.text, ...styles.font.standardText }}>
 					Add new match
 				</Text>
 			</TouchableOpacity>
-			{this.props.qrCodeExists ? (<TouchableOpacity onPress={this.props.onViewQRCode} style={{
+			<TouchableOpacity onPress={this.props.onViewQRCode} style={[{
 				...mainScreenStyles.controlBarButton,
 				backgroundColor: styles.colors.secondary.bg,
-				flexGrow: 0.75
-			}}>
-				<Text style={{ color: styles.colors.secondary.text, ...styles.font.standardText }}>
+				flexGrow: 0.75,
+				
+			}, !this.props.qrCodeExists ? { elevation: 0, backgroundColor: styles.colors.tertiary.bg } : undefined]}
+				disabled={!this.props.qrCodeExists}>
+				<Text style={{
+					color: this.props.qrCodeExists ?
+						styles.colors.secondary.text :
+						styles.colors.secondary.bg, ...styles.font.standardText
+				}}>
 					View QR code
 				</Text>
-			</TouchableOpacity>)
-				: null}
+			</TouchableOpacity>
 		</View>);
 	}
 }
 
-const pages = {homeScreen: 1, addNewMatch: 2, dataInput: 3}
+const pages = {homeScreen: 1, addNewMatch: 2, dataInput: 3, qrCode: 4}
 export default class MainScreen extends React.Component {
 	state = {
 		qrCodeExists: true,
@@ -47,14 +52,79 @@ export default class MainScreen extends React.Component {
 		currentWindow: pages.dataInput,
 		dataEntryIndex: 0,
 		*/
-		matches: [{ teamNumber: 6135, matchNumber: 938 }]
+		matches: [{
+			"assist": "No assist",
+			"broken": false,
+			"cargo1": "None",
+			"cargo2": "None",
+			"cargo3": "None",
+			"cargo4": "None",
+			"climblvlReached": "No climb",
+			"depot": false,
+			"floor": false,
+			"hatch1": "None",
+			"hatch2": "None",
+			"hatch3": "None",
+			"hatch4": "None",
+			"hdropped": 0,
+			"matchNumber": 64,
+			"opposide": 0,
+			"ppoints": 0,
+			"rock1c": 0,
+			"rock1h": 0,
+			"rock2c": 0,
+			"rock2h": 0,
+			"rock3c": 0,
+			"rock3h": 0,
+			"rock4c": 0,
+			"rock4h": 0,
+			"teamNumber": 548,
+			"tip": false,
+		}, {
+				"assist": "No assist",
+				"broken": false,
+				"cargo1": "None",
+				"cargo2": "None",
+				"cargo3": "None",
+				"cargo4": "None",
+				"climblvlReached": "No climb",
+				"depot": false,
+				"floor": false,
+				"hatch1": "None",
+				"hatch2": "None",
+				"hatch3": "None",
+				"hatch4": "None",
+				"hdropped": 0,
+				"matchNumber": 12,
+				"opposide": 0,
+				"ppoints": 0,
+				"rock1c": 0,
+				"rock1h": 0,
+				"rock2c": 0,
+				"rock2h": 0,
+				"rock3c": 0,
+				"rock3h": 0,
+				"rock4c": 0,
+				"rock4h": 0,
+				"teamNumber": 654,
+				"tip": false,
+			}
+]
+		
+	}
+	constructor(props) {
+		super(props);
+		const self = this;
+		SecureStore.getItemAsync("matches").then(function (matches) {
+			console.log(matches, typeof matches);
+			if (matches != "null") self.setState({ matches: JSON.parse(matches) });
+		})
 	}
 	modalCanceled() {
 		this.setState({ currentWindow: pages.homeScreen });
 	}
 	createMatch(teamNumber, matchNumber) {
 		this.setState({ currentWindow: pages.dataInput });
-		//console.log(teamNumber, matchNumber);
 		let newMatches = this.state.matches;
 		newMatches.push({ teamNumber, matchNumber });
 		this.setState({ matches: newMatches, dataEntryIndex: newMatches.length - 1 });
@@ -65,6 +135,7 @@ export default class MainScreen extends React.Component {
 		this.setState({ matches: newMatches });
 	}
 	render() {
+		SecureStore.setItemAsync("matches", JSON.stringify(this.state.matches))
 		const self = this;
 		if (this.state.currentWindow == pages.dataInput) {
 			return (
@@ -80,6 +151,12 @@ export default class MainScreen extends React.Component {
 						onDataChange={(match) => this.dataChange(match)}></DataEntry>
 				</View>
 			)
+		}
+		else if (this.state.currentWindow == pages.qrCode) {
+			return <View style={mainScreenStyles.mainScreen}>
+				<QRCodeGenerator data={this.state.matches}
+					return={() => this.setState({ currentWindow: pages.homeScreen })}/>
+			</View>
 		}
 		return (
 			<View style={mainScreenStyles.mainScreen}>
@@ -125,7 +202,7 @@ export default class MainScreen extends React.Component {
 					flex: 1,
 					flexDirection: "row"
 				}}>
-					<ControlBar qrCodeExists={self.state.qrCodeExists} onAddMatch={
+					<ControlBar onViewQRCode={() => this.setState({currentWindow: pages.qrCode})} qrCodeExists={this.state.matches.length > 0} onAddMatch={
 						(() => this.setState({ currentWindow: pages.addNewMatch })).bind(this)
 						}></ControlBar>
 				</View>
