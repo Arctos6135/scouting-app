@@ -1,9 +1,11 @@
-
 const dataNames = {
+	startLevel: ["startlvl"],
 	cargo: ["cargo1", "cargo2", "cargo3", "cargo4"],
 	hatch: ["hatch1", "hatch2", "hatch3", "hatch4"],
-	rocketCargo: ["rock1c", "rock2c", "rock3c", "rock4c"],
-	rocketHatch: ["rock1h", "rock2h", "rock3h", "rock4h"],
+	rocketCargo: ["rock1c", "rock2c", "rock3c"],
+	rocketHatch: ["rock1h", "rock2h", "rock3h"],
+	shipCargo: ['shipc'],
+	shipHatch: ['shiph'],
 	climbing: {
 		levelReached: "climblvlReached",
 		assist: "assist"
@@ -38,14 +40,19 @@ const assistOptions = [
 	"Level 2",
 	"Level 3"
 ]
+
+const startLevelOptions = [
+	"Level 1",
+	"Level 2"
+]
 const defaultAssistOption = 0;
 
 const gamePieceOptions = [
 	"None",
-	"Rocket 1",
-	"Rocket 2",
-	"Rocket 3",
-	"Rocket 4"
+	"Rocket level 1",
+	"Rocket level 2",
+	"Rocket level 3",
+	"Cargo Ship"
 ]
 const defaultGamePieceOption = 0;
 
@@ -57,10 +64,13 @@ function swap(json) {
 	return ret;
 }
 const dataTypes = {
+	"startLevel": swap(startLevelOptions),
 	"cargo": swap(gamePieceOptions),
 	"hatch": swap(gamePieceOptions),
-	"rocketCargo": [0, 1, 2, 3],
-	"rocketHatch": [0, 1, 2, 3],
+	"rocketCargo": [0, 1, 2, 3, 4],
+	"rocketHatch": [0, 1, 2, 3, 4],
+	"shipCargo": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+	"shipHatch": [0, 1, 2, 3, 4, 5, 6, 7, 8],
 	"climbing": { ...swap(climbOptions), "No assist": 0 },
 	"attributes": [0, 1],
 	"gameInfo": "number",
@@ -68,6 +78,10 @@ const dataTypes = {
 }
 
 const bitmap = {
+	"startLevel": {
+		bits: 3,
+		amount: 1
+	},
 	"cargo": {
 		bits: 3,
 		amount: 4
@@ -77,12 +91,20 @@ const bitmap = {
 		amount: 4
 	},
 	"rocketCargo": {
-		bits: 2,
-		amount: 4
+		bits: 3,
+		amount: 3
 	},
 	"rocketHatch": {
-		bits: 2,
-		amount: 4
+		bits: 3,
+		amount: 3
+	},
+	"shipCargo": {
+		bits: 4,
+		amount: 1
+	},
+	"shipHatch": {
+		bits: 4,
+		amount: 1
 	},
 	"climbing": {
 		bits: 2,
@@ -110,7 +132,6 @@ function getBitLength() {
 	for (let i in dataMap.bitmap) {
 		length += dataMap.bitmap[i].bits * dataMap.bitmap[i].amount;
 	}
-	length = Math.ceil(length / 16);
 	return length;
 }
 function decodeQRCode(message) {
@@ -141,7 +162,7 @@ function decodeBuffer(str) {
 		temp.reverse();
 
 		if (i == arr.length - 1) {
-			temp = temp.slice(16 * (length / 16 - Math.floor(length / 16)) + 1)
+			temp = temp.slice(buffer.length + temp.length - length);
 		}
 
 		buffer.push(...temp);
@@ -267,7 +288,20 @@ function done() {
 	}
 	totalMatches == 0;
 	console.log(decodeQRCode(games));
-	allMatches.push(decodeQRCode(games));
+	let matches = decodeQRCode(games)
+	// Check if match is already entered
+	for (let i = 0; i < matches.length; i++) {
+		let entered = false;
+		for (let j = 0; j < allMatches.length; j++) {
+			if (allMatches[j].matchNumber == matches[i].matchNumber && allMatches[j].teamNumber == matches[i].teamNumber) {
+				entered = true;
+				break;
+			}
+		}
+		if (!entered) {
+			allMatches.push(matches[i]);
+		}
+	}
 	games = "";
 	updateMessage("Done. Press start to begin");
 }

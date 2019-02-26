@@ -25,6 +25,7 @@ function generateBuffer(data) {
 					let propName = dataMap.dataNames[prop][name];
 					let userValue = data[propName];
 					if (typeof userValue == "boolean") userValue = Number(userValue);
+					console.log(prop, userValue);
 					value = parseInt(dataMap.dataTypes[prop][userValue]);
 					//if (!(value > 0)) console.log(dataMap.dataTypes[prop][userValue])
 				}
@@ -91,7 +92,7 @@ function decodeBuffer(str) {
 		temp.reverse();
 
 		if (i == arr.length - 1) {
-			temp = temp.slice(16 * (length / 16 - Math.floor(length / 16)) + 1)
+			temp = temp.slice(16 * (length / 16 - Math.floor(length / 16)))
 		}
 
 		buffer.push(...temp);
@@ -130,7 +131,7 @@ export default class QRCodeGenerator extends React.Component {
 		let codes = [];
 		let matches = generateQRCode(this.props.data);
 		
-		//console.log(decodeQRCode(matches));
+		console.log(decodeQRCode(matches));
 
 		let rawCodes = [];
 		let idx = 0;

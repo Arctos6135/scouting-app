@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import styles from './styles'
 import AddMatchPopup from './addMatch';
 import DataEntry from './dataEntry';
@@ -113,7 +113,20 @@ export default class MainScreen extends React.Component {
 						<MatchList onPress={(index) => {
 							this.setState({dataEntryIndex: index, currentWindow: pages.dataInput})
 						}} touchable = { true} style = {{ zIndex: 1000000 }
-						} matches={this.state.matches}></MatchList>
+							} matches={this.state.matches}></MatchList>
+						
+						<TouchableOpacity onPress={() => { this.runDeleteAllMessage() }} style={{
+							flex: 1,
+							justifyContent: "center",
+							alignItems: "center",
+							backgroundColor: styles.colors.dangerous.bg,
+							width: "100%",
+							margin: 5
+						}}>
+							<Text style={{ color: styles.colors.dangerous.text, ...styles.font.standardText }}>
+								Delete ALL matches
+						</Text>
+						</TouchableOpacity>
 					</ScrollView>
 				</View>
 				{/* Display the popup when adding a new match */}
@@ -153,6 +166,26 @@ export default class MainScreen extends React.Component {
 				}
 			</View>
 		);
+	}
+	runDeleteAllMessage() {
+		const self = this;
+		Alert.alert("Are you sure?",
+			"This will delete every match you have created from your phone",
+			[
+				{
+					text: 'Cancel',
+					style: 'cancel',
+				},
+				{
+					text: "Yes", onPress: () => {
+						self.deleteAll();
+					}
+				}
+			],
+			{ cancelable: true });
+	}
+	deleteAll() {
+		this.setState({matches: []})
 	}
 }
 
