@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head><!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<link rel="public/bootstrap.min.css"/>
+</head>
+<body style="display:flex;width:100%;height:100%;flex-direction: column;justify-content: center;align-items: center;padding-left:20%;padding-right: 20%;">
+	<script src="public/instascan.min.js"></script>
+	<script src="public/jquery-3.2.1.slim.min.js"></script>
+	<script src="public/popper.min.js"></script>
+	<script src="public/bootstrap.min.js"></script>
+
+	<h1 id="message-box">Ready</h1><br>
+	<video id="preview" width="100%"></video>
+	<br>
+
+	<div style="display:flex;flex-direction: row;justify-content: space-between;align-items: center;width:100%">
+		<a type="a" class="btn btn-danger" href="javascript: done()">
+			Cancel (Press escape)
+		</a>
+		<a type="a" class="btn btn-primary" href="javascript: start()">
+			Start (Press the space bar)
+		</a>
+	</div>
+
+	<script src="public/main.js"></script>
+</body>
+</html>
