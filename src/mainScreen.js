@@ -41,82 +41,14 @@ const pages = {homeScreen: 1, addNewMatch: 2, dataInput: 3, qrCode: 4}
 export default class MainScreen extends React.Component {
 	state = {
 		qrCodeExists: true,
-		
-		// COMMENTED OUT FOR DEBUGGING
 		currentWindow: pages.homeScreen,
-		//matches: [],
 		dataEntryIndex: -1,
-		
-		/*
-		//DEBUGGING ONLY, STARTS IN EDITOR
-		currentWindow: pages.dataInput,
-		dataEntryIndex: 0,
-		*/
-		matches: [{
-			"assist": "No assist",
-			"broken": false,
-			"cargo1": "None",
-			"cargo2": "None",
-			"cargo3": "None",
-			"cargo4": "None",
-			"climblvlReached": "No climb",
-			"depot": false,
-			"floor": false,
-			"hatch1": "None",
-			"hatch2": "None",
-			"hatch3": "None",
-			"hatch4": "None",
-			"hdropped": 0,
-			"matchNumber": 64,
-			"opposide": 0,
-			"ppoints": 0,
-			"rock1c": 0,
-			"rock1h": 0,
-			"rock2c": 0,
-			"rock2h": 0,
-			"rock3c": 0,
-			"rock3h": 0,
-			"rock4c": 0,
-			"rock4h": 0,
-			"teamNumber": 548,
-			"tip": false,
-		}, {
-				"assist": "No assist",
-				"broken": false,
-				"cargo1": "None",
-				"cargo2": "None",
-				"cargo3": "None",
-				"cargo4": "None",
-				"climblvlReached": "No climb",
-				"depot": false,
-				"floor": false,
-				"hatch1": "None",
-				"hatch2": "None",
-				"hatch3": "None",
-				"hatch4": "None",
-				"hdropped": 0,
-				"matchNumber": 12,
-				"opposide": 0,
-				"ppoints": 0,
-				"rock1c": 0,
-				"rock1h": 0,
-				"rock2c": 0,
-				"rock2h": 0,
-				"rock3c": 0,
-				"rock3h": 0,
-				"rock4c": 0,
-				"rock4h": 0,
-				"teamNumber": 654,
-				"tip": false,
-			}
-]
-		
+		matches: []
 	}
 	constructor(props) {
 		super(props);
 		const self = this;
 		SecureStore.getItemAsync("matches").then(function (matches) {
-			console.log(matches, typeof matches);
 			if (matches != "null") self.setState({ matches: JSON.parse(matches) });
 		})
 	}

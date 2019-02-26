@@ -145,7 +145,6 @@ export default class DataEntry extends React.Component {
 	}
 	render() {
 		if (this.state.dead) return <View></View>
-		//console.log(this.props.data);
 		let sandstormRockets = [];
 		for (let i = 0; i < dataNames.cargo.length; i++) {
 			sandstormRockets.push(<Row key={i}>
@@ -225,7 +224,7 @@ export default class DataEntry extends React.Component {
 				</inputs.LabeledInput>
 			</Row>
 		)
-		return (<View style={{ width: "100%", flex: 1, flexDirection:"column" }}>
+		return (<View key={0} style={{ width: "100%", flex: 1, flexDirection:"column" }}>
 			{/* Submit and cancel buttons */}
 			<Row>
 				{/* Cancel button */}

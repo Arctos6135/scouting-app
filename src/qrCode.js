@@ -3,10 +3,9 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Dimensions, Butto
 import styles from './styles'
 import QRCode from 'react-native-qrcode';
 import * as dataMap from './dataMap'
-import pako from 'pako'
+import { Buffer } from 'buffer';
 
 function generateBuffer(data) {
-	console.log(data);
 	let length = 0;
 	for (let i in dataMap.bitmap) {
 		length += dataMap.bitmap[i].bits * dataMap.bitmap[i].amount;
@@ -34,6 +33,9 @@ function generateBuffer(data) {
 			}
 		}
 	//}
+
+	console.log(buffer.join(""));
+
 	// Generate the string from that
 	let arr = new Uint16Array(Math.ceil(buffer.length / 16));
 	for (let i = 0; i < buffer.length; i++) {
@@ -50,26 +52,30 @@ function generateQRCode(data) {
 	for (let i in data) {
 		output += generateBuffer(data[i]);
 	}
-	let deflated = pako.deflate(output, { to: "string" });
-	console.log(deflated.length, output.length);
-	return deflated;
+	console.log(data.length);
+	return output;
 }
-function decodeQRCode(message) {
-	message = pako.inflate(message, { to: "string" });
+function getBitLength() {
 	let length = 0;
 	for (let i in dataMap.bitmap) {
 		length += dataMap.bitmap[i].bits * dataMap.bitmap[i].amount;
 	}
 	length = Math.ceil(length / 16);
+	return length;
+}
+function decodeQRCode(message) {
+	let length = getBitLength();
 	let output = [];
 	let m = message.slice(1);
+	console.log(message.charCodeAt(0));
 	for (let i = 0; i < message.charCodeAt(0); i++) {
 		output.push(decodeBuffer(m.slice(0, length)));
-		m = m.slice(0, length);
+		m = m.slice(length);
 	}
 	return output;
 }
 function decodeBuffer(str) {
+	let length = getBitLength();
 	// Get the array of 1s and zeros
 	let arr = new Uint16Array(str.length);
 	for (let i in str) {
@@ -83,8 +89,16 @@ function decodeBuffer(str) {
 			arr[i] >>= 1;
 		}
 		temp.reverse();
+
+		if (i == arr.length - 1) {
+			temp = temp.slice(16 * (length / 16 - Math.floor(length / 16)) + 1)
+		}
+
 		buffer.push(...temp);
 	}
+
+	console.log(buffer.join(""));
+
 	let values = {};
 	let idx = 0;
 	for (let map in dataMap.bitmap) {
@@ -110,30 +124,38 @@ function decodeBuffer(str) {
 	return values;
 }
 
-const qrCodeBytes = 60;
+const qrCodeBytes = 100;
 export default class QRCodeGenerator extends React.Component {
 	render() {
 		let codes = [];
 		let matches = generateQRCode(this.props.data);
 		
+		//console.log(decodeQRCode(matches));
+
 		let rawCodes = [];
 		let idx = 0;
 		for (let i = 0; i < matches.length; i++) {
 			rawCodes[idx] = "";
+			if (idx == 0) rawCodes[idx] += String.fromCharCode(Math.ceil((matches.length / qrCodeBytes) * 2) << 8);
+			else rawCodes[idx] += String.fromCharCode(idx);
+			console.log(rawCodes[idx].charCodeAt(0));
 			for (let j = 0; j < qrCodeBytes / 2 && i < matches.length; j++ , i++) {
 				rawCodes[idx] += matches[i];
 			}
+			console.log(rawCodes[idx], Buffer(rawCodes[idx], 'utf16le').toString('base64'));
 			codes.push(
 				<QRCode
-					size={Dimensions.get("window").width - 50}
-					value={rawCodes[idx]}
+					size={Dimensions.get("window").width - 100}
+					value={Buffer(rawCodes[idx], 'utf16le').toString('base64')}
 				></QRCode>
 			)
 			idx++;
 		}
+		console.log(codes);
 
 		return <View>
 			<QRCodeViewer codes={codes}></QRCodeViewer>
+			<View style={{ height: 50 }}></View>
 			<Button onPress={() => this.props.return()} title={"Back"}></Button>
 		</View>
 	}
@@ -161,7 +183,6 @@ class QRCodeViewer extends React.Component {
 						<Text style={{ ...styles.font.navButton, textAlign: "right" }}>Next</Text>
 					</TouchableOpacity>
 				</View>
-				<View style={{ height: 50 }}></View>
 		</View>) : null}
 		</View>
 		);
