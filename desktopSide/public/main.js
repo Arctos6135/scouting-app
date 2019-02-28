@@ -8,7 +8,8 @@ function getBitLength() {
 	return length;
 }
 function decodeQRCode(message) {
-	let length = getBitLength();
+	let length = Math.ceil(getBitLength() / 16);
+	console.log(message.length);
 	let output = [];
 	let m = message.slice(1);
 	console.log(message.charCodeAt(0));
@@ -41,7 +42,7 @@ function decodeBuffer(str) {
 		buffer.push(...temp);
 	}
 
-	console.log(buffer.join(""));
+	//console.log(buffer.join(""));
 
 	let values = {};
 	let idx = 0;
@@ -85,7 +86,7 @@ let started = false;
 let games = "";
 let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
 scanner.addListener('scan', function (content) {
-	console.log(content);
+	//console.log(content);
 	if (started) addContent(decodeUTF16LE(atob(content)));
 });
 Instascan.Camera.getCameras().then(function (cameras) {
@@ -98,17 +99,17 @@ Instascan.Camera.getCameras().then(function (cameras) {
 	console.error(e);
 });
 let matchNumber = -1;
-let totalMatches = 0;
+let totalQRCodes = 0;
 function addContent(content) {
-	console.log(content);
+	console.log(content, content.length);
 	let qrCodeNumber = content.charCodeAt(0);
 	if (qrCodeNumber >= (1 << 8)) {
 		matchNumber = 1;
-		totalMatches = qrCodeNumber >> 8;
+		totalQRCodes = qrCodeNumber >> 8;
 	}
 	else {
-		if (qrCodeNumber - matchNumber - 1 != 1) {
-			updateMessage("At least one QR code was skipped");
+		if (qrCodeNumber - matchNumber != 0) {
+			updateMessage("Show QR code number " + matchNumber + 2 + ' / ' + totalQRCodes);
 			console.log(qrCodeNumber, matchNumber);
 			return;
 		}
@@ -116,7 +117,7 @@ function addContent(content) {
 	}
 	games += content.slice(1);
 
-	if (matchNumber == totalMatches) {
+	if (matchNumber == totalQRCodes) {
 		done();
 	}
 	updateMessage();
@@ -128,17 +129,17 @@ function updateMessage(message) {
 		return;
 	}
 	message = "";
-	if (totalMatches == 0 && started) {
+	if (totalQRCodes == 0 && started) {
 		message = "Show the first QR code";
 	}
-	else if (matchNumber > totalMatches && started) {
+	else if (matchNumber > totalQRCodes && started) {
 		message = "ERROR. Talk to Alex";
 	}
-	else if (matchNumber == totalMatches && started) {
+	else if (matchNumber == totalQRCodes && started) {
 		message = "Done reading QR Codes.";
 	}
-	else if (totalMatches > 0 && started) {
-		message = `QR Codes ${matchNumber} / ${totalMatches} read. Ready for next QR code.`;
+	else if (totalQRCodes > 0 && started) {
+		message = `QR Codes ${matchNumber} / ${totalQRCodes} read. Ready for next QR code.`;
 	}
 	else {
 		message = "Press start to begin";
@@ -156,11 +157,11 @@ function done() {
 	matchNumber = -1;
 	started = false;
 	console.log('done');
-	if (totalMatches == 0) {
+	if (totalQRCodes == 0) {
 		updateMessage("No QR code given.");
 		return;
 	}
-	totalMatches = 0;
+	totalQRCodes = 0;
 	console.log(decodeQRCode(games));
 	let matches = decodeQRCode(games)
 	// Check if match is already entered

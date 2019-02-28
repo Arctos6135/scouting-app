@@ -135,14 +135,12 @@ export default class QRCodeGenerator extends React.Component {
 
 		let rawCodes = [];
 		let idx = 0;
-		for (let i = 0; i < matches.length; i++) {
+		for (let i = 0; i < matches.length; i += (qrCodeBytes / 2 - 1)) {
 			rawCodes[idx] = "";
 			if (idx == 0) rawCodes[idx] += String.fromCharCode(Math.ceil((matches.length / qrCodeBytes) * 2) << 8);
 			else rawCodes[idx] += String.fromCharCode(idx);
 			console.log(rawCodes[idx].charCodeAt(0));
-			for (let j = 0; j < qrCodeBytes / 2 && i < matches.length; j++ , i++) {
-				rawCodes[idx] += matches[i];
-			}
+			rawCodes[idx] += matches.slice(i, i + (qrCodeBytes / 2 - 1));
 			console.log(rawCodes[idx], Buffer(rawCodes[idx], 'utf16le').toString('base64'));
 			codes.push(
 				<QRCode
