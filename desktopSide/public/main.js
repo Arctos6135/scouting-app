@@ -179,6 +179,8 @@ function done() {
 	}
 	games = "";
 	updateMessage("Done. Press start to begin");
+
+	save();
 }
 
 document.onkeyup = function (e) {

@@ -87,7 +87,7 @@ app.post('/submit', function (req, res) {
 		}
 	}
 	fs.writeFile(outputFile, jsonToCSV(allMatches), console.log.bind(console));
-	fs.writeFile(allMatchFile, JSON.stringify(allMatches), console.log.bind(console));
+	fs.writeFile(allMatchFile, JSON.stringify(allMatches, null, 4), console.log.bind(console));
 })
 
 app.listen(8080);
