@@ -123,9 +123,10 @@ const bitmap = {
 		amount: 2
 	}
 }
+
+
 const dataMap = {
-	bitmap, dataNames, dataTypes
+	bitmap, dataNames, dataTypes, defaultAssistOption, defaultGamePieceOption, defaultClimbOption
 }
 
-if (typeof module != "undefined")
-	module.exports = dataMap;
+module.exports = dataMap;

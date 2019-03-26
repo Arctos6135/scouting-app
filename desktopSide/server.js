@@ -8,6 +8,8 @@ let outputFile = 'output.csv';
 let allMatchFile = 'output.json'
 const datamap = require('./public/datamap.js');
 
+const opn = require('opn');
+
 app.use('/submit', bodyParser.json());
 app.use('/public', express.static('public'));
 app.get('/', function (req, res) {
@@ -61,8 +63,8 @@ function jsonToCSV(json) {
 
 		output += ',' + Number(json[i][datamap.dataNames.attributes.broken]);
 		output += ',' + Number(json[i][datamap.dataNames.attributes.hatchesFromFloor]);
-		output += ',' + Number(json[i][datamap.dataNames.attributes.cargoFromDepot]);
-		output += ',' + json[i][datamap.dataNames.gameInfo.penaltyPoints];
+		//output += ',' + Number(json[i][datamap.dataNames.attributes.cargoFromDepot]);
+		//output += ',' + json[i][datamap.dataNames.gameInfo.penaltyPoints];
 		output += ',' + json[i][datamap.dataNames.gameInfo.hatchesDropped];
 		output += '\n';
 	}
@@ -86,8 +88,13 @@ app.post('/submit', function (req, res) {
 			allMatches.push(req.body[i]);
 		}
 	}
-	fs.writeFile(outputFile, jsonToCSV(allMatches), console.log.bind(console));
-	fs.writeFile(allMatchFile, JSON.stringify(allMatches, null, 4), console.log.bind(console));
+	console.log(allMatches);
+	if (allMatches) {
+		fs.writeFile(outputFile, jsonToCSV(allMatches), console.log.bind(console));
+		fs.writeFile(allMatchFile, JSON.stringify(allMatches, null, 4), console.log.bind(console));
+	}
 })
 
 app.listen(8080);
+
+opn("http://localhost:8080");
