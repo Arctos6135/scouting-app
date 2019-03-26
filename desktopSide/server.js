@@ -6,6 +6,7 @@ const fs = require('fs');
 
 let outputFile = 'output.csv';
 let allMatchFile = 'output.json'
+let previousDataFile = 'previous.csv'
 const datamap = require('./public/datamap.js');
 
 app.use('/submit', bodyParser.json());
@@ -70,6 +71,7 @@ function jsonToCSV(json) {
 }
 
 let allMatches = JSON.parse((fs.readFileSync(allMatchFile) || "[]").toString());
+let previousData = fs.readFileSync(previousDataFile).toString();
 
 app.post('/submit', function (req, res) {
 	console.log(req.body);
@@ -86,7 +88,7 @@ app.post('/submit', function (req, res) {
 			allMatches.push(req.body[i]);
 		}
 	}
-	fs.writeFile(outputFile, jsonToCSV(allMatches), console.log.bind(console));
+	fs.writeFile(outputFile, previousData + jsonToCSV(allMatches), console.log.bind(console)); // output.csv has no headers, so concatenation works
 	fs.writeFile(allMatchFile, JSON.stringify(allMatches, null, 4), console.log.bind(console));
 })
 
