@@ -57,7 +57,7 @@ export default class DataEntry extends React.Component {
 	state = {
 		dead: false
 	}
-	Toggle = (props) => <Row style={{marginBottom: 10}}>
+	Toggle = (props) => <Row style={{ marginBottom: 10 }}>
 		<inputs.LabeledInput textStyle={styles.font.dataEntry} label={props.label} style={dataEntryStyles.gamePieceInput}>
 			<inputs.ToggleInput
 				onValueChange={(selected) =>
@@ -76,7 +76,7 @@ export default class DataEntry extends React.Component {
 				value={this.props.data[props.variable]}></inputs.TimerInput>
 		</inputs.LabeledInput>
 	</Row>
-		
+
 	constructor(props) {
 		super(props);
 		let newData = {
@@ -164,7 +164,7 @@ export default class DataEntry extends React.Component {
 
 				<Spacer></Spacer>
 
-				<inputs.LabeledInput textStyle={styles.font.dataEntry}  label={"Cargo " + (i + 1)} style={dataEntryStyles.gamePieceInput}>
+				<inputs.LabeledInput textStyle={styles.font.dataEntry} label={"Cargo " + (i + 1)} style={dataEntryStyles.gamePieceInput}>
 					<inputs.PickerInput value={this.props.data[dataNames.cargo[i]]} options={gamePieceOptions}
 						onValueChange={(selected) => this.dataUpdated(selected, dataNames.cargo[i])}
 						style={{
@@ -183,8 +183,8 @@ export default class DataEntry extends React.Component {
 			teleopRockets.push(<Row key={key++}>
 				<Text style={[styles.font.subHeader]}>Rocket {(i + 1).toString()}</Text>
 			</Row>)
-			teleopRockets.push(<Row style={{paddingBottom: 5}} key={key++}>
-				<inputs.LabeledInput textStyle={styles.font.dataEntry}  label={"Cargo"} style={dataEntryStyles.gamePieceInput}>
+			teleopRockets.push(<Row style={{ paddingBottom: 5 }} key={key++}>
+				<inputs.LabeledInput textStyle={styles.font.dataEntry} label={"Cargo"} style={dataEntryStyles.gamePieceInput}>
 					<inputs.SliderInput step={1} minimumValue={0} maximumValue={4} value={this.props.data[dataNames.rocketCargo[i]]} options={gamePieceOptions}
 						onValueChange={(value) => this.dataUpdated(value, dataNames.rocketCargo[i])}
 					></inputs.SliderInput>
@@ -245,7 +245,7 @@ export default class DataEntry extends React.Component {
 				</inputs.LabeledInput>
 			</Row>
 		)
-		return (<View key={0} style={{ width: "100%", flex: 1, flexDirection:"column" }}>
+		return (<View key={0} style={{ width: "100%", flex: 1, flexDirection: "column" }}>
 			{/* Submit and cancel buttons */}
 			<Row>
 				{/* Cancel button */}
@@ -284,17 +284,17 @@ export default class DataEntry extends React.Component {
 				<Row style={{ paddingBottom: 5 }}>
 					<inputs.LabeledInput textStyle={styles.font.dataEntry} label={"Start Level"} style={dataEntryStyles.gamePieceInput}>
 						<inputs.PickerInput value={this.props.data[dataNames.startLevel[0]]} options={startLevelOptions} onValueChange={(selected) => this.dataUpdated(selected, dataNames.startLevel[0])}
-						style={{
-							backgroundColor:
-								this.props.data[dataNames.startLevel[0]] == startLevelOptions[0] ?
-									styles.colors.tertiary.bg : styles.colors.secondary.bg
-						}}
+							style={{
+								backgroundColor:
+									this.props.data[dataNames.startLevel[0]] == startLevelOptions[0] ?
+										styles.colors.tertiary.bg : styles.colors.secondary.bg
+							}}
 						></inputs.PickerInput>
 					</inputs.LabeledInput>
 				</Row>
 				{sandstormRockets}
 
-				<Row style={{ paddingTop: headingPadding}}>
+				<Row style={{ paddingTop: headingPadding }}>
 					<Text style={dataEntryStyles.header}>
 						Tele-op
 					</Text>
@@ -315,9 +315,9 @@ export default class DataEntry extends React.Component {
 				</Row>
 				<this.Toggle label="Did the robot break?" variable={dataNames.attributes.broken}></this.Toggle>
 				<this.Toggle label="Did the robot tip?" variable={dataNames.attributes.tip}></this.Toggle>
-				<this.Toggle label="Can the robot pick up cargo from the depot?" variable={dataNames.attributes.cargoFromDepot}></this.Toggle>
+				{/*<this.Toggle label="Can the robot pick up cargo from the depot?" variable={dataNames.attributes.cargoFromDepot}></this.Toggle>*/}
 				<this.Toggle label="Can it pick up hatches from the floor?" variable={dataNames.attributes.hatchesFromFloor}></this.Toggle>
-				
+
 				<Row>
 					<inputs.LabeledInput textStyle={styles.font.dataEntry} label={"Time spent on opponents side of field"} style={dataEntryStyles.gamePieceInput}>
 						<inputs.TimeInput value={this.props.data[dataNames.gameInfo.opposingSideTime]} onValueChange={(value) => this.dataUpdated(value, dataNames.gameInfo.opposingSideTime)}>
@@ -325,12 +325,12 @@ export default class DataEntry extends React.Component {
 					</inputs.LabeledInput>
 				</Row>
 
-				<Row>
+				{/*<Row>
 					<inputs.LabeledInput textStyle={styles.font.dataEntry} label={"Total penalty points earned by alliance"} style={dataEntryStyles.gamePieceInput}>
 						<inputs.ClickerInput value={this.props.data[dataNames.gameInfo.penaltyPoints]} onValueChange={(value) => this.dataUpdated(value, dataNames.gameInfo.penaltyPoints)}>
 						</inputs.ClickerInput>
 					</inputs.LabeledInput>
-				</Row>
+				</Row>*/}
 
 				<Row>
 					<inputs.LabeledInput textStyle={styles.font.dataEntry} label={"Number of hatches dropped"} style={dataEntryStyles.gamePieceInput}>
