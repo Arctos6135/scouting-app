@@ -42,6 +42,7 @@ const assistOptions = [
 ]
 
 const startLevelOptions = [
+	"Didn't cross baseline",
 	"Level 1",
 	"Level 2"
 ]
@@ -79,7 +80,7 @@ const dataTypes = {
 
 const bitmap = {
 	"startLevel": {
-		bits: 3,
+		bits: 2,
 		amount: 1
 	},
 	"cargo": {

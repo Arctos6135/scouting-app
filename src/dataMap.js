@@ -42,6 +42,7 @@ export const assistOptions = [
 ]
 
 export const startLevelOptions = [
+	"Didn't cross baseline",
 	"Level 1",
 	"Level 2"
 ]
@@ -79,7 +80,7 @@ export const dataTypes = {
 
 export const bitmap = {
 	"startLevel": {
-		bits: 3,
+		bits: 2,
 		amount: 1
 	},
 	"cargo": {
