@@ -13,26 +13,26 @@ function generateBuffer(data) {
 	let buffer = [];
 	// Create an array of bits for each match in the qr code
 	//for (let i in data) {
-		for (let prop in dataMap.bitmap) {
-			for (let name in dataMap.dataNames[prop]) {
-				let type = dataMap.bitmap[prop];
-				let value;
-				//console.log(prop, JSON.stringify(dataMap.dataTypes[prop]), data[dataMap.dataNames[prop][name]], dataMap.dataNames[prop][name])
-				if (dataMap.dataTypes[prop] == "number") {
-					value = parseInt(data[dataMap.dataNames[prop][name]]);
-				}
-				else {
-					let propName = dataMap.dataNames[prop][name];
-					let userValue = data[propName];
-					if (typeof userValue == "boolean") userValue = Number(userValue);
-					console.log(prop, userValue);
-					value = parseInt(dataMap.dataTypes[prop][userValue]);
-					//if (!(value > 0)) console.log(dataMap.dataTypes[prop][userValue])
-				}
-				buffer.push(...(value.toString(2).slice(-type.bits).padStart(type.bits, '0')))
-				//console.log(dataMap.dataNames[prop][name], value.toString(2), value.toString(2).slice(-type.bits).padStart(type.bits, '0'));
+	for (let prop in dataMap.bitmap) {
+		for (let name in dataMap.dataNames[prop]) {
+			let type = dataMap.bitmap[prop];
+			let value;
+			//console.log(prop, JSON.stringify(dataMap.dataTypes[prop]), data[dataMap.dataNames[prop][name]], dataMap.dataNames[prop][name])
+			if (dataMap.dataTypes[prop] == "number") {
+				value = parseInt(data[dataMap.dataNames[prop][name]]);
 			}
+			else {
+				let propName = dataMap.dataNames[prop][name];
+				let userValue = data[propName];
+				if (typeof userValue == "boolean") userValue = Number(userValue);
+				console.log(prop, userValue);
+				value = parseInt(dataMap.dataTypes[prop][userValue]);
+				//if (!(value > 0)) console.log(dataMap.dataTypes[prop][userValue])
+			}
+			buffer.push(...(value.toString(2).slice(-type.bits).padStart(type.bits, '0')))
+			//console.log(dataMap.dataNames[prop][name], value.toString(2), value.toString(2).slice(-type.bits).padStart(type.bits, '0'));
 		}
+	}
 	//}
 
 	console.log(buffer.join(""));
@@ -51,6 +51,7 @@ function generateBuffer(data) {
 function generateQRCode(data) {
 	let output = String.fromCharCode(data.length);
 	for (let i in data) {
+		if (data[i].deleted) continue;
 		output += generateBuffer(data[i]);
 	}
 	console.log(data.length);
@@ -110,7 +111,7 @@ function decodeBuffer(str) {
 				idx++;
 			}
 			values[dataMap.dataNames[map][j]] = parseInt(bits, 2);
-			
+
 		}
 	}
 
@@ -130,7 +131,7 @@ export default class QRCodeGenerator extends React.Component {
 	render() {
 		let codes = [];
 		let matches = generateQRCode(this.props.data);
-		
+
 		console.log(decodeQRCode(matches));
 
 		let rawCodes = [];
@@ -182,9 +183,9 @@ class QRCodeViewer extends React.Component {
 						<Text style={{ ...styles.font.navButton, textAlign: "right" }}>Next</Text>
 					</TouchableOpacity>
 				</View>
-		</View>) : null}
+			</View>) : null}
 		</View>
 		);
-				
+
 	}
 }

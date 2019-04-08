@@ -6,9 +6,10 @@ import * as inputs from './inputs.js'
 export default class MatchList extends React.Component {
 	render() {
 		if (!this.props.matches) return (<View></View>)
-		
+
 		let matches = [];
 		for (let i in this.props.matches) {
+			if (this.props.matches[i].deleted) continue;
 			matches.push(
 				<TouchableOpacity key={i} disabled={!this.props.touchable}
 					onPress={() => {
@@ -21,15 +22,15 @@ export default class MatchList extends React.Component {
 					<View style={{
 						flexDirection: "row",
 						justifyContent: "space-between"
-					}}>	
+					}}>
 						<View style={{ flex: 1 }}>
 							<Text style={{ flex: 1, textAlign: "right", ...styles.font.matchInfo }}>{this.props.matches[i].matchNumber}</Text>
 						</View>
 						<View style={{ flex: 0.3 }}></View>
-						<View style={{flex: 1}}>
+						<View style={{ flex: 1 }}>
 							<Text style={{ flex: 1, textAlign: "left", ...styles.font.matchInfo }}>{this.props.matches[i].teamNumber}</Text>
 						</View>
-						
+
 					</View>
 				</TouchableOpacity>
 			)
