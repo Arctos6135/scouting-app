@@ -24,11 +24,11 @@ export default class MatchList extends React.Component {
 						justifyContent: "space-between"
 					}}>
 						<View style={{ flex: 1 }}>
-							<Text style={{ flex: 1, textAlign: "right", ...styles.font.matchInfo }}>{this.props.matches[i].matchNumber}</Text>
+							{this.props.editable ? <inputs.NumberInput onValueChange={(value) => this.updateMatchNumber(value, i)} value={this.props.matches[i].matchNumber} style={{ flex: 1, textAlign: "right", ...styles.font.matchInfo }} /> : <Text style={{ flex: 1, textAlign: "right", ...styles.font.matchInfo }}>{this.props.matches[i].matchNumber}</Text>}
 						</View>
 						<View style={{ flex: 0.3 }}></View>
 						<View style={{ flex: 1 }}>
-							<Text style={{ flex: 1, textAlign: "left", ...styles.font.matchInfo }}>{this.props.matches[i].teamNumber}</Text>
+							{this.props.editable ? <inputs.NumberInput onValueChange={(value) => this.updateTeamNumber(value, i)} value={this.props.matches[i].teamNumber} style={{ flex: 1, textAlign: "left", ...styles.font.matchInfo }} /> : <Text style={{ flex: 1, textAlign: "left", ...styles.font.matchInfo }}>{this.props.matches[i].teamNumber}</Text>}
 						</View>
 
 					</View>
@@ -54,5 +54,16 @@ export default class MatchList extends React.Component {
 			<View style={{ height: 8 }}></View>
 			{matches}
 		</View>
+	}
+
+	updateMatchNumber(value, i) {
+		console.log('update match number');
+		this.props.matches[i].matchNumber = value;
+		this.setState({});
+	}
+	updateTeamNumber(value, i) {
+		console.log('update team number');
+		this.props.matches[i].teamNumber = value;
+		this.setState({});
 	}
 }

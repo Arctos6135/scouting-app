@@ -272,7 +272,7 @@ export default class DataEntry extends React.Component {
 			<View style={{ height: 30 }}></View>
 			<ScrollView>
 				<Row>
-					<MatchList matches={[this.props.data]}></MatchList>
+					<MatchList editable matches={[this.props.data]}></MatchList>
 				</Row>
 				<View style={{ height: headingPadding }}></View>
 				{/* Sandstorm phase */}

@@ -22,7 +22,7 @@ class ControlBar extends React.Component {
 				...mainScreenStyles.controlBarButton,
 				backgroundColor: styles.colors.secondary.bg,
 				flexGrow: 0.75,
-				
+
 			}, !this.props.qrCodeExists ? { elevation: 0, backgroundColor: styles.colors.tertiary.bg } : undefined]}
 				disabled={!this.props.qrCodeExists}>
 				<Text style={{
@@ -37,7 +37,7 @@ class ControlBar extends React.Component {
 	}
 }
 
-const pages = {homeScreen: 1, addNewMatch: 2, dataInput: 3, qrCode: 4}
+const pages = { homeScreen: 1, addNewMatch: 2, dataInput: 3, qrCode: 4 }
 export default class MainScreen extends React.Component {
 	state = {
 		qrCodeExists: true,
@@ -76,7 +76,7 @@ export default class MainScreen extends React.Component {
 						return={() => this.setState({ currentWindow: pages.homeScreen })}
 						delete={() => {
 							let newMatches = this.state.matches;
-							newMatches.splice(this.state.dataEntryIndex, 1);
+							newMatches[this.state.dataEntryIndex].deleted = true;
 							this.setState({ matches: newMatches });
 						}}
 						data={this.state.matches[this.state.dataEntryIndex]}
@@ -87,7 +87,7 @@ export default class MainScreen extends React.Component {
 		else if (this.state.currentWindow == pages.qrCode) {
 			return <View style={mainScreenStyles.mainScreen}>
 				<QRCodeGenerator data={this.state.matches}
-					return={() => this.setState({ currentWindow: pages.homeScreen })}/>
+					return={() => this.setState({ currentWindow: pages.homeScreen })} />
 			</View>
 		}
 		return (
@@ -107,14 +107,14 @@ export default class MainScreen extends React.Component {
 					height: "100%",
 					overflow: "scroll"
 				}}>
-					
+
 					<ScrollView>
 						{/*                Whatever it takes                */}
 						<MatchList onPress={(index) => {
-							this.setState({dataEntryIndex: index, currentWindow: pages.dataInput})
-						}} touchable = { true} style = {{ zIndex: 1000000 }
-							} matches={this.state.matches}></MatchList>
-						
+							this.setState({ dataEntryIndex: index, currentWindow: pages.dataInput })
+						}} touchable={true} style={{ zIndex: 1000000 }
+						} matches={this.state.matches}></MatchList>
+
 						<TouchableOpacity onPress={() => { this.runDeleteAllMessage() }} style={{
 							flex: 1,
 							justifyContent: "center",
@@ -130,7 +130,7 @@ export default class MainScreen extends React.Component {
 					</ScrollView>
 				</View>
 				{/* Display the popup when adding a new match */}
-				{this.state.currentWindow == pages.addNewMatch ? 
+				{this.state.currentWindow == pages.addNewMatch ?
 					<View style={{
 						flex: 1,
 						position: "absolute",
@@ -147,9 +147,9 @@ export default class MainScreen extends React.Component {
 					flex: 1,
 					flexDirection: "row"
 				}}>
-					<ControlBar onViewQRCode={() => this.setState({currentWindow: pages.qrCode})} qrCodeExists={this.state.matches.length > 0} onAddMatch={
+					<ControlBar onViewQRCode={() => this.setState({ currentWindow: pages.qrCode })} qrCodeExists={this.state.matches.length > 0} onAddMatch={
 						(() => this.setState({ currentWindow: pages.addNewMatch })).bind(this)
-						}></ControlBar>
+					}></ControlBar>
 				</View>
 
 				{/* Create a grey cover for everything behind the popup when adding a new match */}
@@ -185,7 +185,7 @@ export default class MainScreen extends React.Component {
 			{ cancelable: true });
 	}
 	deleteAll() {
-		this.setState({matches: []})
+		this.setState({ matches: [] })
 	}
 }
 
