@@ -48,10 +48,13 @@ function generateBuffer(data) {
 	for (let c of arr) output += String.fromCharCode(c);
 	return output;
 }
-function generateQRCode(data) {
+function generateQRCode(allData) {
+	let data = [];
+	for (let i in allData) {
+		if (!allData[i].deleted) data.push(allData[i]);
+	}
 	let output = String.fromCharCode(data.length);
 	for (let i in data) {
-		if (data[i].deleted) continue;
 		output += generateBuffer(data[i]);
 	}
 	console.log(data.length);
