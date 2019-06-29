@@ -25,6 +25,7 @@ export const dataNames = {
 		matchNumber: "matchNumber",
 		teamNumber: "teamNumber"
 	}
+	alliance: ["alliance"]
 }
 
 export const climbOptions = [
@@ -57,6 +58,11 @@ export const gamePieceOptions = [
 ]
 export const defaultGamePieceOption = 0;
 
+export const allianceOptions = [
+	"Blue",
+	"Red"
+]
+
 function swap(json) {
 	let ret = {};
 	for (let key in json) {
@@ -75,8 +81,10 @@ export const dataTypes = {
 	"climbing": { ...swap(climbOptions), "No assist": 0 },
 	"attributes": [0, 1],
 	"gameInfo": "number",
-	"matchInfo": "number"
+	"matchInfo": "number",
+	"alliance": swap(allianceOptions)
 }
+
 
 export const bitmap = {
 	"startLevel": {
@@ -121,6 +129,10 @@ export const bitmap = {
 	},
 	"matchInfo": {
 		bits: 16,
-		amount: 2
+		amount: 3
+	},
+	"alliance": {
+		bits: 1,
+		amount: 1
 	}
 }

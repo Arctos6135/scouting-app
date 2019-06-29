@@ -66,9 +66,10 @@ export default class AddMatchPopup extends React.Component {
 	state = {
 		teamNumber: 0,
 		matchNumber: 0
+		alliance: 0
 	}
 	render() {
-		let disabled = !(this.state.teamNumber && this.state.matchNumber);
+		let disabled = !(this.state.teamNumber && this.state.matchNumber && this.state.alliance);
 		return (
 			<View style={addMatchStyles.mainPopup}>
 				{/* Create a new match */}
@@ -87,6 +88,18 @@ export default class AddMatchPopup extends React.Component {
 					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={addMatchStyles.numberInput} label="Enter a team number">
 						<inputs.NumberInput allowEmpty onValueChange={(newTeamNumber)=>this.setState({teamNumber: newTeamNumber})}></inputs.NumberInput>
 					</inputs.LabeledInput>
+					{/* Alliance color */}
+					<inputs.LabeledInput textStyle={styles.font.inputHeader} label={"Enter alliance color"} style={dataEntryStyles.gamePieceInput}>
+						<inputs.PickerInput value={this.props.data[dataNames.alliance[0]]} options={allianceOptions}
+							onValueChange={(newAlliance) => this.setState({alliance: newAlliance})
+							style={{
+								backgroundColor:
+									this.state.alliance == 0 ? styles.colors.allianceBlue.bg : styles.colors.allianceRed.bg
+								color:
+									styles.colors.allianceBlue.text
+							}}
+						></inputs.PickerInput>
+					</inputs.LabeledInput>
 				</View>
 				{/* Submit and cancel buttons */}
 				<View style={addMatchStyles.controlBar}>
@@ -104,7 +117,7 @@ export default class AddMatchPopup extends React.Component {
 					{/* Submit button */}
 					<TouchableOpacity
 						disabled={disabled}
-						onPress={() => this.props.onSubmit(this.state.teamNumber, this.state.matchNumber)}
+						onPress={() => this.props.onSubmit(this.state.teamNumber, this.state.matchNumber, this.state.alliance)}
 						style={addMatchStyles.button}
 					><Text
 							style={[{ ...addMatchStyles.buttonText, fontWeight: "bold" }, disabled ? { color: "#e0e0e0" } : null]}>

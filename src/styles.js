@@ -19,6 +19,14 @@ export default styles = {
 		dangerous: {
 			bg: "#ffffff",
 			text: "#aa0000"
+		},
+		allianceBlue: {
+			bg: "#0066FF"
+			text: "#FFFFFF"
+		},
+		allianceRed: {
+			bg: "#FF0000"
+			text: "#FFFFFF"
 		}
 	},
 	shadow: {
