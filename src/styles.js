@@ -21,11 +21,11 @@ export default styles = {
 			text: "#aa0000"
 		},
 		allianceBlue: {
-			bg: "#0066FF"
+			bg: "#0066FF",
 			text: "#FFFFFF"
 		},
 		allianceRed: {
-			bg: "#FF0000"
+			bg: "#FF0000",
 			text: "#FFFFFF"
 		}
 	},

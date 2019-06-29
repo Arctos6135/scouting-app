@@ -24,7 +24,7 @@ export const dataNames = {
 	matchInfo: {
 		matchNumber: "matchNumber",
 		teamNumber: "teamNumber"
-	}
+	},
 	alliance: ["alliance"]
 }
 

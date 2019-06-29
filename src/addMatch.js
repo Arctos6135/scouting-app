@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import styles from './styles'
 import * as inputs from './inputs.js'
+import { dataNames, allianceOptions } from './dataMap'
 
 export const addMatchStyles = {
 	mainPopup: {
@@ -59,13 +60,16 @@ export const addMatchStyles = {
 	},
 	numberInput: {
 		marginVertical: "10%"
+	},
+	gamePieceInput: {
+		flex: 1
 	}
 }
 
 export default class AddMatchPopup extends React.Component {
 	state = {
 		teamNumber: 0,
-		matchNumber: 0
+		matchNumber: 0,
 		alliance: 0
 	}
 	render() {
@@ -89,12 +93,12 @@ export default class AddMatchPopup extends React.Component {
 						<inputs.NumberInput allowEmpty onValueChange={(newTeamNumber)=>this.setState({teamNumber: newTeamNumber})}></inputs.NumberInput>
 					</inputs.LabeledInput>
 					{/* Alliance color */}
-					<inputs.LabeledInput textStyle={styles.font.inputHeader} label={"Enter alliance color"} style={dataEntryStyles.gamePieceInput}>
+					<inputs.LabeledInput textStyle={styles.font.inputHeader} label={"Enter alliance color"} style={addMatchStyles.gamePieceInput}>
 						<inputs.PickerInput value={this.props.data[dataNames.alliance[0]]} options={allianceOptions}
-							onValueChange={(newAlliance) => this.setState({alliance: newAlliance})
+							onValueChange={(newAlliance) => this.setState({alliance: newAlliance})}
 							style={{
 								backgroundColor:
-									this.state.alliance == 0 ? styles.colors.allianceBlue.bg : styles.colors.allianceRed.bg
+									this.state.alliance == 0 ? styles.colors.allianceBlue.bg : styles.colors.allianceRed.bg,
 								color:
 									styles.colors.allianceBlue.text
 							}}
