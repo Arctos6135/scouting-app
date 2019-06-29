@@ -20,7 +20,7 @@ function jsonToCSV(json) {
 	let output = '';
 	for (let i in json) {
 		output += json[i][datamap.dataNames.matchInfo.teamNumber] +
-			',,'
+			','
 			+ json[i][datamap.dataNames.matchInfo.matchNumber] + ','
 			+ json[i][datamap.dataNames.startLevel[0]] + ',';
 		let hatches = [0, 0, 0, 0, 0];
