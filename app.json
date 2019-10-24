@@ -3,7 +3,7 @@
     "name": "Scouting-App",
     "slug": "scouting-app",
     "privacy": "public",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "33.0.0",
     "platforms": [
       "ios",
       "android"
@@ -34,6 +34,7 @@
       "package": "arctos6135.ScoutingApp",
       "publishBundlePath": "android/app/src/main/assets/shell-app.bundle",
       "publishManifestPath": "android/app/src/main/assets/shell-app-manifest.json"
-    }
+    },
+    "description": ""
   }
 }
