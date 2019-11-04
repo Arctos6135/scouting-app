@@ -49,6 +49,7 @@ export default class MainScreen extends React.Component {
 		super(props);
 		const self = this;
 		SecureStore.getItemAsync("matches").then(function (matches) {
+			if (!matches) return;
 			if (matches != "null") self.setState({ matches: JSON.parse(matches) });
 		})
 	}
