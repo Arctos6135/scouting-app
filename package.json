@@ -9,6 +9,7 @@
   "dependencies": {
     "buffer": "^5.0.6",
     "expo": "^33.0.0",
+    "expo-secure-store": "~5.0.1",
     "expokit": "^32.0.7",
     "pako": "^1.0.8",
     "react": "16.8.3",
@@ -17,7 +18,7 @@
     "react-native-qrcode": "^0.2.7",
     "react-native-slider": "^0.11.0",
     "react-native-switch": "^1.5.0",
-    "expo-secure-store": "~5.0.1"
+    "react-qr-code": "^0.1.3"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"
