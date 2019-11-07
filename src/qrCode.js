@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Dimensions, Button } from 'react-native';
 import styles from './styles'
-import QRCode from 'react-native-qrcode';
+import QRCode from 'react-native-qrcode-svg';
 import * as dataMap from './dataMap'
 import { Buffer } from 'buffer';
 
@@ -150,7 +150,7 @@ export default class QRCodeGenerator extends React.Component {
 				<QRCode
 					size={Dimensions.get("window").width - 100}
 					value={Buffer(rawCodes[idx], 'utf16le').toString('base64')}
-				></QRCode>
+				/>
 			)
 			idx++;
 		}
