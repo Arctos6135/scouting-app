@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Dimensions, Button } from 'react-native';
 import styles from './styles'
-import QRCode from 'react-qr-code';
+import QRCode from 'react-native-qrcode-svg';
 import * as dataMap from './dataMap'
 import { Buffer } from 'buffer';
 
