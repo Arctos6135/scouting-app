@@ -5,7 +5,7 @@ import AddMatchPopup from './addMatch';
 import DataEntry from './dataEntry';
 import MatchList from './listMatches';
 import QRCodeGenerator from './qrCode';
-import { SecureStore } from 'expo';
+import * as SecureStore from 'expo-secure-store';
 
 class ControlBar extends React.Component {
 	constructor(props) {
