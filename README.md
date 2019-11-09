@@ -6,7 +6,9 @@ Make sure you have a new version of `nodejs` and `npm` installed. In order to te
 ```
 npm install -g expo-cli
 ```
-You might need to run it as root. Then git clone this repository with
+
+You might need to run it as root.   To just be able to run the desktop side, after cloning this repository run ```npm install``` in both scouting-app and desktopSide. Then you can open the desktop app with ```cd desktopSide``` ```npm start```
+   git clone this repository with
 ```
 git clone https://github.com/Arctos6135/scouting-app.git
 cd scouting-app
