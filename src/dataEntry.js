@@ -6,7 +6,7 @@ import MatchList from './listMatches'
 import { popupStyles } from './popups'
 import { startLevelOptions, dataNames, dataTypes, assistOptions, gamePieceOptions, climbOptions, defaultAssistOption, defaultClimbOption, defaultGamePieceOption } from './dataMap'
 
-const dmap = [
+export const dmap = [
 	{
 		title: "Sandstorm",
 		rows: [
@@ -20,13 +20,13 @@ const dmap = [
 				{
 					title: "Hatch 1",
 					type: "picker",
-					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", , "Cargo Ship"],
+					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", "Cargo Ship"],
 					id: 'sh1'
 				},
 				{
 					title: "Cargo 1",
 					type: "picker",
-					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", , "Cargo Ship"],
+					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", "Cargo Ship"],
 					id: 'sc1'
 				}
 			],
@@ -34,13 +34,13 @@ const dmap = [
 				{
 					title: "Hatch 2",
 					type: "picker",
-					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", , "Cargo Ship"],
+					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", "Cargo Ship"],
 					id: 'sh2'
 				},
 				{
 					title: "Cargo 2",
 					type: "picker",
-					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", , "Cargo Ship"],
+					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", "Cargo Ship"],
 					id: 'sc2'
 				}
 			],
@@ -48,13 +48,13 @@ const dmap = [
 				{
 					title: "Hatch 3",
 					type: "picker",
-					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", , "Cargo Ship"],
+					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", "Cargo Ship"],
 					id: 'sh3'
 				},
 				{
 					title: "Cargo 3",
 					type: "picker",
-					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", , "Cargo Ship"],
+					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", "Cargo Ship"],
 					id: 'sc3'
 				}
 			],
@@ -62,13 +62,13 @@ const dmap = [
 				{
 					title: "Hatch 4",
 					type: "picker",
-					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", , "Cargo Ship"],
+					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", "Cargo Ship"],
 					id: 'sh4'
 				},
 				{
 					title: "Cargo 4",
 					type: "picker",
-					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", , "Cargo Ship"],
+					options: ["None", "Rocket Level 1", "Rocket Level 2", "Rocket Level 3", "Cargo Ship"],
 					id: 'sc4'
 				}
 			]
@@ -105,14 +105,14 @@ const dmap = [
 				type: "slider",
 				range: [0, 4],
 				increment: 1,
-				id: 'tc1'
+				id: 'tc2'
 			},
 			{
 				title: "Hatch",
 				type: "slider",
 				range: [0, 4],
 				increment: 1,
-				id: 'th1'
+				id: 'th2'
 			},
 			
 			{
@@ -124,14 +124,14 @@ const dmap = [
 				type: "slider",
 				range: [0, 4],
 				increment: 1,
-				id: 'tc1'
+				id: 'tc3'
 			},
 			{
 				title: "Hatch",
 				type: "slider",
 				range: [0, 4],
 				increment: 1,
-				id: 'th1'
+				id: 'th3'
 			},
 			
 			{
@@ -246,7 +246,29 @@ const dataEntryStyles = {
 }
 
 class DataMap {
-	constructor(data) {
+
+
+
+	Toggle = (props) => <Row style={{ marginBottom: 10 }}>
+		<inputs.LabeledInput textStyle={styles.font.dataEntry} label={props.label} style={dataEntryStyles.gamePieceInput}>
+			<inputs.ToggleInput
+				onValueChange={(selected) =>
+					this.dataUpdated(selected, props.variable)}
+				activeText={props.active}
+				inactiveText={props.inactive}
+				value={this.data[props.variable] == 1}></inputs.ToggleInput>
+		</inputs.LabeledInput>
+	</Row>
+
+	Timer = (props) => <Row style={{ marginBottom: 10 }}>
+		<inputs.LabeledInput textStyle={styles.font.dataEntry} label={props.label} style={dataEntryStyles.gamePieceInput}>
+			<inputs.TimerInput
+				onValueChange={(selected) =>
+					this.dataUpdated(selected, props.variable)}
+				value={this.data[props.variable]}></inputs.TimerInput>
+		</inputs.LabeledInput>
+	</Row>
+	constructor(data, cb) {
 		this.sections = [];
 		this.sectionData = [];
 		this.components = [];
@@ -258,7 +280,7 @@ class DataMap {
 				title: section.title,
 				type: "header"
 			});
-			for (let r of data.rows) {
+			for (let r of section.rows) {
 				sectionData.push(r);
 				this.components.push(r);
 				if (Array.isArray(r)) {
@@ -271,28 +293,84 @@ class DataMap {
 			this.sectionData.push(sectionData);
 		}
 		this.raw = data;
+		this.data = {};
+		for (let i of this.variables) {
+			this.data[i] = 0;
+		}
+		this.cb = cb;
+		this.key = 0;
 	}
 	generateEntry() {
 		let out = [];
-		for (let i in this.components) out.push(DataMap.getRow(this.components[i]));
+		this.key = 0;
+		for (let i in this.components) out.push(this.getRow(this.components[i]));
 		return out;
 	}
-	static getComponent(component) {
-		//TODO: Write code to generate components
+	getComponent(component, key) {
+
+		switch (component.type) {
+			case "header":
+				return (
+					<View>
+						<View style={{ height: headingPadding }}></View>
+						<Text key={key} style={dataEntryStyles.header}>
+							{component.title}
+						</Text>
+					</View>)
+					break;
+				case "text":
+				return (<Text key={key} style={[styles.font.subHeader]}>{component.title}</Text>)
+				break;
+			case "picker":
+				return (<inputs.LabeledInput key={key} textStyle={styles.font.dataEntry} label={component.title} style={dataEntryStyles.gamePieceInput}>
+					<inputs.PickerInput value={component.options[this.data[component.id]]} options={component.options}
+						onValueChange={(selected) => this.dataUpdated(component.options.indexOf(selected), component.id)}
+						style={{
+							backgroundColor:
+								this.data[component.id] == 0 ?
+									styles.colors.tertiary.bg : styles.colors.secondary.bg
+						}}
+					></inputs.PickerInput>
+				</inputs.LabeledInput>);
+				break;
+			case "slider":
+				return (<inputs.LabeledInput textStyle={styles.font.dataEntry} label={component.title} style={dataEntryStyles.gamePieceInput}>
+					<inputs.SliderInput step={component.increment} minimumValue={component.range[0]} maximumValue={component.range[1]} value={this.data[component.id]} options={gamePieceOptions}
+						onValueChange={(value) => this.dataUpdated(value, component.id)}
+					></inputs.SliderInput>
+				</inputs.LabeledInput>)
+				break;
+			case "toggle":
+				return (<this.Toggle label={component.title} variable={component.id} active={component.options[1]} inactive={component.options[0]}></this.Toggle>)
+				break;
+			case "timer":
+				break;
+			case "number":
+				break;
+		}
 	}
-	static getRow(component) {
+	updateData(newData) {
+		this.data = newData;
+		this.cb();
+	}
+	dataUpdated(newValue, id) {
+		this.data[id] = newValue;
+		this.cb();
+	}
+	getRow(component) {
 		let output;
 		if (Array.isArray(component)) {
 			let row = [];
 			for (let c of component) {
-				row.push(DataMap.getComponent(c));
-				row.push(<Spacer></Spacer>)
+				row.push(this.getComponent(c, this.key++));
+				this.key++;
+				row.push(<Spacer key={this.key++}></Spacer>)
 			}
 			row = row.slice(0, -1);
-			output = (<Row>{row}</Row>)
+			output = (<Row key={this.key++}>{row}</Row>)
 		}
 		else {
-			output = (<Row>{DataMap.getComponent(component)}</Row>)
+			output = (<Row key={this.key++}>{this.getComponent(component, this.key++)}</Row>)
 		}
 		return output;
 	}
@@ -310,50 +388,37 @@ const Row = (props) =>
 const Spacer = (props) => (<View style={{ flex: 0.1 }}></View>);
 
 export default class DataEntry extends React.Component {
-	
-	Toggle = (props) => <Row style={{ marginBottom: 10 }}>
-		<inputs.LabeledInput textStyle={styles.font.dataEntry} label={props.label} style={dataEntryStyles.gamePieceInput}>
-			<inputs.ToggleInput
-				onValueChange={(selected) =>
-					this.dataUpdated(selected, props.variable)}
-				activeText={props.active}
-				inactiveText={props.inactive}
-				value={this.props.data[props.variable]}></inputs.ToggleInput>
-		</inputs.LabeledInput>
-	</Row>
-
-	Timer = (props) => <Row style={{ marginBottom: 10 }}>
-		<inputs.LabeledInput textStyle={styles.font.dataEntry} label={props.label} style={dataEntryStyles.gamePieceInput}>
-			<inputs.TimerInput
-				onValueChange={(selected) =>
-					this.dataUpdated(selected, props.variable)}
-				value={this.props.data[props.variable]}></inputs.TimerInput>
-		</inputs.LabeledInput>
-	</Row>
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			dead: false,
-			dataMap: new DataMap(props.dataMap)
+			dead: false
 		}
-		this.originalValue = props.data;
-		if (props.data['#']) {
-			let newData = {};
-			for (let i of this.state.dataMap.variables) {
-				newData[i] = 0;
-			}
-			this.props.onDataChange(newData);
-			this.originalValue = newData;
+		console.log('constructor');
+	}
+	
+	componentWillMount() {
+		this.dataMap = new DataMap(this.props.dataMap, () => {
+			this.props.onDataChange(this.dataMap.data);
+			this.setState();
+		})
+		this.dataMap.data.teamNumber = this.props.data.teamNumber;
+		this.dataMap.data.matchNumber = this.props.data.matchNumber;
+		if (this.props.data['#']) {
+			this.props.onDataChange(this.dataMap.data);
 		}
+		else {
+			this.dataMap.updateData(this.props.data)
+		}
+		this.originalValue = { ...this.dataMap.data };
 	}
 
 	render() {
 		if (this.state.dead) return <View></View>
 	
-		let dataEntry = this.state.dataMap.generateEntry();
+		let dataEntry = this.dataMap.generateEntry();
 
-		return (<View key={0} style={{ width: "100%", flex: 1, flexDirection: "column" }}>
+		return (<View style={{ width: "100%", flex: 1, flexDirection: "column" }}>
 			{/* Submit and cancel buttons */}
 			<Row>
 				{/* Cancel button */}
@@ -382,7 +447,6 @@ export default class DataEntry extends React.Component {
 				<Row>
 					<MatchList editable matches={[this.props.data]}></MatchList>
 				</Row>
-				<View style={{ height: headingPadding }}></View>
 				
 				{dataEntry}
 
@@ -413,7 +477,7 @@ export default class DataEntry extends React.Component {
 		this.props.onDataChange(newData);
 	}
 	onCancel() {
-		this.props.onDataChange(this.originalValue);
+		this.dataMap.updateData(this.originalValue);
 		this.props.return();
 	}
 	onDone() {
