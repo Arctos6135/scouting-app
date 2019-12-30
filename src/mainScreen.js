@@ -73,7 +73,7 @@ export default class MainScreen extends React.Component {
 	createMatch(teamNumber, matchNumber) {
 		this.setState({ currentWindow: pages.dataInput });
 		let newMatches = this.state.matches;
-		newMatches.push({ teamNumber, matchNumber });
+		newMatches.push({ teamNumber, matchNumber, '#': true });
 		this.setState({ matches: newMatches, dataEntryIndex: newMatches.length - 1 });
 	}
 	dataChange(match) {

@@ -245,6 +245,59 @@ const dataEntryStyles = {
 	}
 }
 
+class DataMap {
+	constructor(data) {
+		this.sections = [];
+		this.sectionData = [];
+		this.components = [];
+		this.variables = [];
+		for (let section of data) {
+			this.sections.push(section.title);
+			let sectionData = [];
+			this.components.push({
+				title: section.title,
+				type: "header"
+			});
+			for (let r of data.rows) {
+				sectionData.push(r);
+				this.components.push(r);
+				if (Array.isArray(r)) {
+					for (let i of r) {
+						this.variables.push(i.id);
+					}
+				}
+				this.variables.push(r.id);
+			}
+			this.sectionData.push(sectionData);
+		}
+		this.raw = data;
+	}
+	generateEntry() {
+		let out = [];
+		for (let i in this.components) out.push(DataMap.getRow(this.components[i]));
+		return out;
+	}
+	static getComponent(component) {
+		//TODO: Write code to generate components
+	}
+	static getRow(component) {
+		let output;
+		if (Array.isArray(component)) {
+			let row = [];
+			for (let c of component) {
+				row.push(DataMap.getComponent(c));
+				row.push(<Spacer></Spacer>)
+			}
+			row = row.slice(0, -1);
+			output = (<Row>{row}</Row>)
+		}
+		else {
+			output = (<Row>{DataMap.getComponent(component)}</Row>)
+		}
+		return output;
+	}
+}
+
 const Row = (props) =>
 	(<View style={[{
 		width: "100%",
@@ -257,16 +310,14 @@ const Row = (props) =>
 const Spacer = (props) => (<View style={{ flex: 0.1 }}></View>);
 
 export default class DataEntry extends React.Component {
-	state = {
-		dead: false
-	}
+	
 	Toggle = (props) => <Row style={{ marginBottom: 10 }}>
 		<inputs.LabeledInput textStyle={styles.font.dataEntry} label={props.label} style={dataEntryStyles.gamePieceInput}>
 			<inputs.ToggleInput
 				onValueChange={(selected) =>
 					this.dataUpdated(selected, props.variable)}
-				activeText={"Yes"}
-				inactiveText={"No"}
+				activeText={props.active}
+				inactiveText={props.inactive}
 				value={this.props.data[props.variable]}></inputs.ToggleInput>
 		</inputs.LabeledInput>
 	</Row>
@@ -282,6 +333,108 @@ export default class DataEntry extends React.Component {
 
 	constructor(props) {
 		super(props);
+		this.state = {
+			dead: false,
+			dataMap: new DataMap(props.dataMap)
+		}
+		this.originalValue = props.data;
+		if (props.data['#']) {
+			let newData = {};
+			for (let i of this.state.dataMap.variables) {
+				newData[i] = 0;
+			}
+			this.props.onDataChange(newData);
+			this.originalValue = newData;
+		}
+	}
+
+	render() {
+		if (this.state.dead) return <View></View>
+	
+		let dataEntry = this.state.dataMap.generateEntry();
+
+		return (<View key={0} style={{ width: "100%", flex: 1, flexDirection: "column" }}>
+			{/* Submit and cancel buttons */}
+			<Row>
+				{/* Cancel button */}
+				<TouchableOpacity
+					onPress={() => this.onCancel()}
+					style={dataEntryStyles.navigationButton}
+				>
+					<Text style={dataEntryStyles.buttonText}>
+						Cancel
+					</Text>
+				</TouchableOpacity>
+
+
+				{/* Submit button */}
+				<TouchableOpacity
+					onPress={() => this.onDone()}
+					style={dataEntryStyles.navigationButton}
+				>
+					<Text style={{ ...dataEntryStyles.buttonText, fontWeight: "bold", textAlign: "right" }}>
+						Done
+					</Text>
+				</TouchableOpacity>
+			</Row>
+			<View style={{ height: 30 }}></View>
+			<ScrollView>
+				<Row>
+					<MatchList editable matches={[this.props.data]}></MatchList>
+				</Row>
+				<View style={{ height: headingPadding }}></View>
+				
+				{dataEntry}
+
+				<View style={{ height: 50 }}></View>
+				<Row>
+					<TouchableOpacity onPress={() => { this.runDeleteMessage() }} style={dataEntryStyles.controlBarButton}>
+						<Text style={{ color: styles.colors.dangerous.text, ...styles.font.standardText }}>
+							Delete Match
+						</Text>
+					</TouchableOpacity>
+				</Row>
+				<View style={{ height: 150 }}></View>
+			</ScrollView>
+		</View>)
+	}
+
+	delete() {
+		this.setState({ dead: true });
+		this.props.delete();
+		this.props.return();
+	}
+
+	dataUpdated(data, property) {
+		let newData = {
+			...this.props.data
+		};
+		newData[property] = data;
+		this.props.onDataChange(newData);
+	}
+	onCancel() {
+		this.props.onDataChange(this.originalValue);
+		this.props.return();
+	}
+	onDone() {
+		this.props.return();
+	}
+	runDeleteMessage() {
+		const self = this;
+		Alert.alert("Are you sure?",
+			"Deleting a match cannot be undone.",
+			[
+				{
+					text: 'Cancel',
+					style: 'cancel',
+				},
+				{
+					text: "Yes", onPress: () => {
+						self.delete();
+					}
+				}
+			],
+			{ cancelable: true });
 	}
 		/*let newData = {
 			...this.props.data
