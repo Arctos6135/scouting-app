@@ -344,8 +344,16 @@ class DataMap {
 				return (<this.Toggle label={component.title} variable={component.id} active={component.options[1]} inactive={component.options[0]}></this.Toggle>)
 				break;
 			case "timer":
+				return (<inputs.LabeledInput textStyle={styles.font.dataEntry} label={component.title} style={dataEntryStyles.gamePieceInput}>
+					<inputs.TimeInput value={this.data[component.id]} onValueChange={(value) => this.dataUpdated(value, component.id)}>
+					</inputs.TimeInput>
+				</inputs.LabeledInput>);
 				break;
 			case "number":
+				return (<inputs.LabeledInput textStyle={styles.font.dataEntry} label={component.title} style={dataEntryStyles.gamePieceInput}>
+					<inputs.ClickerInput value={this.data[component.id]} onValueChange={(value) => this.dataUpdated(value, component.id)}>
+					</inputs.ClickerInput>
+				</inputs.LabeledInput>)
 				break;
 		}
 	}
