@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import styles from './styles'
-import AddMatchPopup from './addMatch';
+import { AddMatchPopup, SetupPopup } from './popups';
 import DataEntry from './dataEntry';
 import MatchList from './listMatches';
 import QRCodeGenerator from './qrCode';
@@ -18,32 +18,45 @@ class ControlBar extends React.Component {
 					Add new match
 				</Text>
 			</TouchableOpacity>
-			<TouchableOpacity onPress={this.props.onViewQRCode} style={[{
-				...mainScreenStyles.controlBarButton,
-				backgroundColor: styles.colors.secondary.bg,
-				flexGrow: 0.75,
+			<View style={{ flexDirection: "row", flexGrow: 0.75, width: "100%" }}>
+				<TouchableOpacity style={{
+					...mainScreenStyles.controlBarButton,
+					backgroundColor: styles.colors.secondary.bg,
+					flexGrow: 1,
+				}} onPress={this.props.onSetup}>
+					<Text style={{ color: styles.colors.highlight.text, ...styles.font.standardText }}>
+						Setup
+					</Text>
+				</TouchableOpacity>
 
-			}, !this.props.qrCodeExists ? { elevation: 0, backgroundColor: styles.colors.tertiary.bg } : undefined]}
-				disabled={!this.props.qrCodeExists}>
-				<Text style={{
-					color: this.props.qrCodeExists ?
-						styles.colors.secondary.text :
-						styles.colors.secondary.bg, ...styles.font.standardText
-				}}>
-					View QR code
-				</Text>
-			</TouchableOpacity>
+				<TouchableOpacity onPress={this.props.onViewQRCode} style={[{
+					...mainScreenStyles.controlBarButton,
+					backgroundColor: styles.colors.secondary.bg,
+					flexGrow: 1,
+
+				}, !this.props.qrCodeExists ? { elevation: 0, backgroundColor: styles.colors.tertiary.bg } : undefined]}
+					disabled={!this.props.qrCodeExists}>
+					<Text style={{
+						color: this.props.qrCodeExists ?
+							styles.colors.secondary.text :
+							styles.colors.secondary.bg, ...styles.font.standardText
+					}}>
+						View QR code
+					</Text>
+				</TouchableOpacity>
+			</View>
 		</View>);
 	}
 }
 
-const pages = { homeScreen: 1, addNewMatch: 2, dataInput: 3, qrCode: 4 }
+const pages = { homeScreen: 1, addNewMatch: 2, dataInput: 3, qrCode: 4, setup: 5 }
 export default class MainScreen extends React.Component {
 	state = {
 		qrCodeExists: true,
 		currentWindow: pages.homeScreen,
 		dataEntryIndex: -1,
-		matches: []
+		matches: [],
+		wifiMode: false
 	}
 	constructor(props) {
 		super(props);
@@ -51,7 +64,8 @@ export default class MainScreen extends React.Component {
 		SecureStore.getItemAsync("matches").then(function (matches) {
 			if (!matches) return;
 			if (matches != "null") self.setState({ matches: JSON.parse(matches) });
-		})
+		});
+		//TODO: Add polling for wifi mode
 	}
 	modalCanceled() {
 		this.setState({ currentWindow: pages.homeScreen });
@@ -141,6 +155,22 @@ export default class MainScreen extends React.Component {
 						...styles.align.center
 					}}><AddMatchPopup onCancel={() => this.modalCanceled()} onSubmit={(team, match) => this.createMatch(team, match)}></AddMatchPopup></View>
 					: null}
+				
+				{/* Display the popup when doing setup */}
+				{this.state.currentWindow == pages.setup ?
+					<View style={{
+						flex: 1,
+						position: "absolute",
+						width: "100%",
+						height: "75%",
+						zIndex: 100,
+						...styles.align.center
+					}}><SetupPopup wifiMode={this.state.wifiMode} onCancel={() => this.modalCanceled()} onSubmit={(wifiMode) => {
+						this.setState({ wifiMode: wifiMode });
+						this.setState({ currentWindow: pages.homeScreen });
+					}
+					}></SetupPopup></View>
+					: null}
 
 				<View style={{ flex: 0.75 }}></View>
 
@@ -148,13 +178,13 @@ export default class MainScreen extends React.Component {
 					flex: 1,
 					flexDirection: "row"
 				}}>
-					<ControlBar onViewQRCode={() => this.setState({ currentWindow: pages.qrCode })} qrCodeExists={this.state.matches.length > 0} onAddMatch={
+					<ControlBar onSetup={() => this.setState({currentWindow: pages.setup})}onViewQRCode={() => this.setState({ currentWindow: pages.qrCode })} qrCodeExists={this.state.matches.length > 0} onAddMatch={
 						(() => this.setState({ currentWindow: pages.addNewMatch })).bind(this)
 					}></ControlBar>
 				</View>
 
 				{/* Create a grey cover for everything behind the popup when adding a new match */}
-				{this.state.currentWindow == pages.addNewMatch ?
+				{[pages.addNewMatch, pages.setup].includes(this.state.currentWindow) ?
 					<View style={{
 						width: "125%",
 						height: "125%",
@@ -206,7 +236,7 @@ const mainScreenStyles = {
 		flex: 1,
 		alignSelf: "flex-end",
 		justifyContent: "center",
-		alignItems: "center",
+		alignItems: "stretch",
 		flexDirection: "column",
 		height: 130,
 		zIndex: 1,
@@ -217,7 +247,6 @@ const mainScreenStyles = {
 		justifyContent: "center",
 		alignItems: "center",
 		backgroundColor: styles.colors.highlight.bg,
-		width: "100%",
 		margin: 5,
 		...styles.shadow
 	}

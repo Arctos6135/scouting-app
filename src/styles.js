@@ -60,6 +60,12 @@ export default styles = {
 			justifyContent: "center",
 			alignItems: "center",
 			width:"100%"
+		},
+		bottom: {
+			textAlign: "center",
+			justifyContent: "space-between",
+			alignItems: "flex-end",
+			width: "100%"
 		}
 	},
 	inputs: {
