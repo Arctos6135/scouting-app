@@ -282,7 +282,8 @@ export default class DataEntry extends React.Component {
 
 	constructor(props) {
 		super(props);
-		let newData = {
+	}
+		/*let newData = {
 			...this.props.data
 		}
 		if (!newData[dataNames.startLevel[0]]) newData[dataNames.startLevel[0]] = startLevelOptions[0];
@@ -449,9 +450,9 @@ export default class DataEntry extends React.Component {
 			</Row>
 		)
 		return (<View key={0} style={{ width: "100%", flex: 1, flexDirection: "column" }}>
-			{/* Submit and cancel buttons */}
+			{/* Submit and cancel buttons /}
 			<Row>
-				{/* Cancel button */}
+				{/* Cancel button /}
 				<TouchableOpacity
 					onPress={() => this.onCancel()}
 					style={dataEntryStyles.navigationButton}
@@ -462,7 +463,7 @@ export default class DataEntry extends React.Component {
 				</TouchableOpacity>
 
 
-				{/* Submit button */}
+				{/* Submit button /}
 				<TouchableOpacity
 					onPress={() => this.onDone()}
 					style={dataEntryStyles.navigationButton}
@@ -478,7 +479,7 @@ export default class DataEntry extends React.Component {
 					<MatchList editable matches={[this.props.data]}></MatchList>
 				</Row>
 				<View style={{ height: headingPadding }}></View>
-				{/* Sandstorm phase */}
+				{/* Sandstorm phase /}
 				<Row>
 					<Text style={dataEntryStyles.header}>
 						Sandstorm
@@ -518,7 +519,7 @@ export default class DataEntry extends React.Component {
 				</Row>
 				<this.Toggle label="Did the robot break?" variable={dataNames.attributes.broken}></this.Toggle>
 				<this.Toggle label="Did the robot tip?" variable={dataNames.attributes.tip}></this.Toggle>
-				{/*<this.Toggle label="Can the robot pick up cargo from the depot?" variable={dataNames.attributes.cargoFromDepot}></this.Toggle>*/}
+				{/*<this.Toggle label="Can the robot pick up cargo from the depot?" variable={dataNames.attributes.cargoFromDepot}></this.Toggle>/}
 				<this.Toggle label="Can it pick up hatches from the floor?" variable={dataNames.attributes.hatchesFromFloor}></this.Toggle>
 
 				<Row>
@@ -533,7 +534,7 @@ export default class DataEntry extends React.Component {
 						<inputs.ClickerInput value={this.props.data[dataNames.gameInfo.penaltyPoints]} onValueChange={(value) => this.dataUpdated(value, dataNames.gameInfo.penaltyPoints)}>
 						</inputs.ClickerInput>
 					</inputs.LabeledInput>
-				</Row>*/}
+				</Row>}
 
 				<Row>
 					<inputs.LabeledInput textStyle={styles.font.dataEntry} label={"Number of hatches dropped"} style={dataEntryStyles.gamePieceInput}>
@@ -553,5 +554,5 @@ export default class DataEntry extends React.Component {
 				<View style={{ height: 150 }}></View>
 			</ScrollView>
 		</View>)
-	}
+	}*/
 }
