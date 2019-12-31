@@ -1,18 +1,87 @@
 
+let bitmap = {};
 
+function getBits(component) {
+	let range;
+	if (component.type == 'picker') range = component.options.length;
+	else if (component.type == 'slider') range = component.range[1];
+	else if (component.type == 'toggle') {
+		range = 1;
+	}
+	else if (component.id) range = 255;
+	else range = 0;
+	return Math.floor(Math.log2(range)) + 1;
+}
+
+function getBitSizes(dataMap) {
+	let bitmap = {
+		matchNumber: 12,
+		teamNumber: 14
+	};
+	let d = new DataMap(dataMap, () => { });
+	for (let i of d.components) {
+		if (Array.isArray(i)) {
+			for (let j of i) {
+				if (!j.id) continue;
+				bitmap[j.id] = getBits(j);
+			}
+		}
+		else {
+			if (!i.id) continue;
+			bitmap[i.id] = getBits(i);
+		}
+	}
+	return bitmap;
+}
+
+bitmap = getBitSizes(dataMap.dmap);
+
+function generateBuffer(data) {
+	let length = 0;
+	let buffer = [];
+
+	console.log(bitmap);
+
+	for (let i in bitmap) {
+		if (!i) continue;
+		buffer.push(...(Math.round(data[i] || 0).toString(2).padStart(bitmap[i], '0')));
+		console.log((Math.round(data[i] || 0).toString(2).padStart(bitmap[i], '0')), i, data[i]);
+	}
+	// Generate the string from that
+	let arr = new Uint16Array(Math.ceil(buffer.length / 16));
+	for (let i = 0; i < buffer.length; i++) {
+		let idx = Math.floor(i / 16);
+		arr[idx] <<= 1;
+		arr[idx] += parseInt(buffer[i]);
+	}
+	let output = "";
+	for (let c of arr) output += String.fromCharCode(c);
+	return output;
+}
+function generateQRCode(allData) {
+	let data = [];
+	for (let i in allData) {
+		if (!allData[i].deleted) data.push(allData[i]);
+	}
+	let output = String.fromCharCode(data.length);
+	for (let i in data) {
+		output += generateBuffer(data[i]);
+	}
+	console.log(data.length);
+	return output;
+}
 function getBitLength() {
 	let length = 0;
-	for (let i in dataMap.bitmap) {
-		length += dataMap.bitmap[i].bits * dataMap.bitmap[i].amount;
+	for (let i in bitmap) {
+		length += bitmap[i];
 	}
+	length = Math.ceil(length / 16);
 	return length;
 }
 function decodeQRCode(message) {
-	let length = Math.ceil(getBitLength() / 16);
-	console.log(message.length);
+	let length = getBitLength();
 	let output = [];
 	let m = message.slice(1);
-	console.log(message.charCodeAt(0));
 	for (let i = 0; i < message.charCodeAt(0); i++) {
 		output.push(decodeBuffer(m.slice(0, length)));
 		m = m.slice(length);
@@ -20,6 +89,7 @@ function decodeQRCode(message) {
 	return output;
 }
 function decodeBuffer(str) {
+	console.log(bitmap);
 	let length = getBitLength();
 	// Get the array of 1s and zeros
 	let arr = new Uint16Array(str.length);
@@ -28,45 +98,48 @@ function decodeBuffer(str) {
 	}
 	let buffer = [];
 	for (let i in arr) {
-		let temp = [];
-		for (let j = 0; j < 16; j++) {
-			temp.push(arr[i] & 1);
-			arr[i] >>= 1;
-		}
-		temp.reverse();
-
-		if (i == arr.length - 1) {
-			temp = temp.slice(buffer.length + temp.length - length);
-		}
-
-		buffer.push(...temp);
+		buffer.push(arr[i].toString(2).padStart(16, '0'));
 	}
 
-	//console.log(buffer.join(""));
-
+	buffer = buffer.join("");
 	let values = {};
 	let idx = 0;
-	for (let map in dataMap.bitmap) {
-		for (let j in dataMap.dataNames[map]) {
-			let bits = "";
-			for (let i = 0; i < dataMap.bitmap[map].bits; i++) {
-				bits += buffer[idx].toString();
-				idx++;
-			}
-			values[dataMap.dataNames[map][j]] = parseInt(bits, 2);
+	for (let i in bitmap) {
+		console.log(i);
+		if (!i) continue;
 
-		}
+		let d = parseInt(buffer.slice(idx, idx + bitmap[i]), 2);
+		idx += bitmap[i];
+		values[i] = d;
 	}
+
+	let output = {};
 
 	// The object is all numbers, so it should turn it back into usable values
-	for (let i in dataMap.bitmap) {
-		if (dataMap.bitmap[i].bits == 1) {
-			for (let j in dataMap.dataNames[i]) {
-				values[dataMap.dataNames[i][j]] = !!values[dataMap.dataNames[i][j]];
+	for (let i in dataMap.dmap.form) {
+		for (let j in dataMap.dmap.form[i].rows) {
+			let components = [];
+			if (Array.isArray(dataMap.dmap.form[i].rows[j])) components = dataMap.dmap.form[i].rows[j];
+			else components = [dataMap.dmap.form[i].rows[j]];
+			for (let c of components) {
+				switch (c.type) {
+					case "picker":
+					case "toggle":
+						output[c.id] = c.options[values[c.id]];
+						break;
+					case "text":
+					case "header":
+						break;
+					default:
+						output[c.id] = values[c.id];
+						break;
+				}
 			}
 		}
 	}
-	return values;
+	output.teamNumber = values.teamNumber;
+	output.matchNumber = values.matchNumber;
+	return output;
 }
 
 //Braindead decoder that assumes fully valid input

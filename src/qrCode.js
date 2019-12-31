@@ -1,42 +1,57 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Dimensions, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Dimensions, Button, CheckBox } from 'react-native';
 import styles from './styles'
 import QRCode from 'react-native-qrcode-svg';
 import * as dataMap from './dataMap'
 import { Buffer } from 'buffer';
+import { DataMap } from './dataEntry'
+
+let bitmap = {};
+
+function getBits(component) {
+	let range;
+	if (component.type == 'picker') range = component.options.length;
+	else if (component.type == 'slider') range = component.range[1];
+	else if (component.type == 'toggle') {
+		range = 1;
+	}
+	else if (component.id) range = 255;
+	else range = 0;
+	return Math.floor(Math.log2(range)) + 1;
+}
+
+function getBitSizes(dataMap) {
+	let bitmap = {
+		matchNumber: 12,
+		teamNumber: 14
+	};
+	let d = new DataMap(dataMap, () => { });
+	for (let i of d.components) {
+		if (Array.isArray(i)) {
+			for (let j of i) {
+				if (!j.id) continue;
+				bitmap[j.id] = getBits(j);
+			}
+		}
+		else {
+			if (!i.id) continue;
+			bitmap[i.id] = getBits(i);
+		}
+	}
+	return bitmap;
+}
 
 function generateBuffer(data) {
 	let length = 0;
-	for (let i in dataMap.bitmap) {
-		length += dataMap.bitmap[i].bits * dataMap.bitmap[i].amount;
-	}
 	let buffer = [];
-	// Create an array of bits for each match in the qr code
-	//for (let i in data) {
-	for (let prop in dataMap.bitmap) {
-		for (let name in dataMap.dataNames[prop]) {
-			let type = dataMap.bitmap[prop];
-			let value;
-			//console.log(prop, JSON.stringify(dataMap.dataTypes[prop]), data[dataMap.dataNames[prop][name]], dataMap.dataNames[prop][name])
-			if (dataMap.dataTypes[prop] == "number") {
-				value = parseInt(data[dataMap.dataNames[prop][name]]);
-			}
-			else {
-				let propName = dataMap.dataNames[prop][name];
-				let userValue = data[propName];
-				if (typeof userValue == "boolean") userValue = Number(userValue);
-				console.log(prop, userValue);
-				value = parseInt(dataMap.dataTypes[prop][userValue]);
-				//if (!(value > 0)) console.log(dataMap.dataTypes[prop][userValue])
-			}
-			buffer.push(...(value.toString(2).slice(-type.bits).padStart(type.bits, '0')))
-			//console.log(dataMap.dataNames[prop][name], value.toString(2), value.toString(2).slice(-type.bits).padStart(type.bits, '0'));
-		}
+
+	console.log(bitmap);
+	
+	for (let i in bitmap) {
+		if (!i) continue;
+		buffer.push(...(Math.round(data[i] || 0).toString(2).padStart(bitmap[i], '0')));
+		console.log((Math.round(data[i] || 0).toString(2).padStart(bitmap[i], '0')), i, data[i]);
 	}
-	//}
-
-	console.log(buffer.join(""));
-
 	// Generate the string from that
 	let arr = new Uint16Array(Math.ceil(buffer.length / 16));
 	for (let i = 0; i < buffer.length; i++) {
@@ -62,8 +77,8 @@ function generateQRCode(allData) {
 }
 function getBitLength() {
 	let length = 0;
-	for (let i in dataMap.bitmap) {
-		length += dataMap.bitmap[i].bits * dataMap.bitmap[i].amount;
+	for (let i in bitmap) {
+		length += bitmap[i];
 	}
 	length = Math.ceil(length / 16);
 	return length;
@@ -72,7 +87,6 @@ function decodeQRCode(message) {
 	let length = getBitLength();
 	let output = [];
 	let m = message.slice(1);
-	console.log(message.charCodeAt(0));
 	for (let i = 0; i < message.charCodeAt(0); i++) {
 		output.push(decodeBuffer(m.slice(0, length)));
 		m = m.slice(length);
@@ -80,6 +94,7 @@ function decodeQRCode(message) {
 	return output;
 }
 function decodeBuffer(str) {
+	console.log(bitmap);
 	let length = getBitLength();
 	// Get the array of 1s and zeros
 	let arr = new Uint16Array(str.length);
@@ -88,55 +103,59 @@ function decodeBuffer(str) {
 	}
 	let buffer = [];
 	for (let i in arr) {
-		let temp = [];
-		for (let j = 0; j < 16; j++) {
-			temp.push(arr[i] & 1);
-			arr[i] >>= 1;
-		}
-		temp.reverse();
-
-		if (i == arr.length - 1) {
-			temp = temp.slice(16 * (length / 16 - Math.floor(length / 16)))
-		}
-
-		buffer.push(...temp);
+		buffer.push(arr[i].toString(2).padStart(16, '0'));
 	}
 
-	console.log(buffer.join(""));
-
+	buffer = buffer.join("");
 	let values = {};
 	let idx = 0;
-	for (let map in dataMap.bitmap) {
-		for (let j in dataMap.dataNames[map]) {
-			let bits = "";
-			for (let i = 0; i < dataMap.bitmap[map].bits; i++) {
-				bits += buffer[idx].toString();
-				idx++;
-			}
-			values[dataMap.dataNames[map][j]] = parseInt(bits, 2);
+	for (let i in bitmap) {
+		console.log(i);
+		if (!i) continue;
 
-		}
+		let d = parseInt(buffer.slice(idx, idx + bitmap[i]), 2);
+		idx += bitmap[i];
+		values[i] = d;
 	}
+
+	let output = {};
 
 	// The object is all numbers, so it should turn it back into usable values
-	for (let i in dataMap.bitmap) {
-		if (dataMap.bitmap[i].bits == 1) {
-			for (let j in dataMap.dataNames[i]) {
-				values[dataMap.dataNames[i][j]] = !!values[dataMap.dataNames[i][j]];
+	for (let i in dataMap.dmap.form) {
+		for (let j in dataMap.dmap.form[i].rows) {
+			let components = [];
+			if (Array.isArray(dataMap.dmap.form[i].rows[j])) components = dataMap.dmap.form[i].rows[j];
+			else components = [dataMap.dmap.form[i].rows[j]];
+			for (let c of components) {
+				switch (c.type) {
+					case "picker":
+					case "toggle":
+						output[c.id] = c.options[values[c.id]];
+						break;
+					case "text":
+					case "header":
+						break;
+					default:
+						output[c.id] = values[c.id];
+						break;
+				}
 			}
 		}
 	}
-	return values;
+	output.teamNumber = values.teamNumber;
+	output.matchNumber = values.matchNumber;
+	return output;
 }
 
 const qrCodeBytes = 100;
 export default class QRCodeGenerator extends React.Component {
 	render() {
+		bitmap = getBitSizes(dataMap.dmap.form);
 		let codes = [];
 		let matches = generateQRCode(this.props.data);
-
+		console.log('generated', matches);
 		console.log(decodeQRCode(matches));
-
+		console.log('decoded');
 		let rawCodes = [];
 		let idx = 0;
 		for (let i = 0; i < matches.length; i += (qrCodeBytes / 2 - 1)) {

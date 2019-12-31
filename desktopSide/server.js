@@ -15,7 +15,7 @@ app.use('/public', express.static('public'));
 app.get('/', function (req, res) {
 	res.sendFile('index.html', { root: path.join(__dirname, './public') });
 });
-
+//TODO: Make this work
 function jsonToCSV(json) {
 	let output = '';
 	for (let i in json) {

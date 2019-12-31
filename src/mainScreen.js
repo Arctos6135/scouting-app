@@ -2,7 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import styles from './styles'
 import { AddMatchPopup, SetupPopup } from './popups';
-import DataEntry, {dmap} from './dataEntry';
+import DataEntry from './dataEntry';
+import { dmap } from './dataMap';
 import MatchList from './listMatches';
 import QRCodeGenerator from './qrCode';
 import * as SecureStore from 'expo-secure-store';
@@ -88,7 +89,7 @@ export default class MainScreen extends React.Component {
 			return (
 				<View style={mainScreenStyles.mainScreen}>
 					<DataEntry
-						dataMap={dmap}
+						dataMap={dmap.form}
 						return={() => this.setState({ currentWindow: pages.homeScreen })}
 						delete={() => {
 							let newMatches = this.state.matches;
