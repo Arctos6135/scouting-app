@@ -78,56 +78,6 @@ const dataTypes = {
 	"matchInfo": "number"
 }
 
-const bitmap = {
-	"startLevel": {
-		bits: 2,
-		amount: 1
-	},
-	"cargo": {
-		bits: 3,
-		amount: 4
-	},
-	"hatch": {
-		bits: 3,
-		amount: 4
-	},
-	"rocketCargo": {
-		bits: 3,
-		amount: 3
-	},
-	"rocketHatch": {
-		bits: 3,
-		amount: 3
-	},
-	"shipCargo": {
-		bits: 4,
-		amount: 1
-	},
-	"shipHatch": {
-		bits: 4,
-		amount: 1
-	},
-	"climbing": {
-		bits: 2,
-		amount: 2
-	},
-	"attributes": {
-		bits: 1,
-		amount: 4
-	},
-	"gameInfo": {
-		bits: 8,
-		amount: 3
-	},
-	"matchInfo": {
-		bits: 16,
-		amount: 2
-	}
-}
-
-
-
-
 const dmap = {
 	id: 0,
 	form: [
@@ -334,10 +284,52 @@ const dmap = {
 	]
 }
 
+class DataMap {
+	constructor(data, cb) {
+		this.sections = [];
+		this.sectionData = [];
+		this.components = [];
+		this.variables = [];
+		for (let section of data) {
+			this.sections.push(section.title);
+			let sectionData = [];
+			this.components.push({
+				title: section.title,
+				type: "header"
+			});
+			for (let r of section.rows) {
+				sectionData.push(r);
+				this.components.push(r);
+				if (Array.isArray(r)) {
+					for (let i of r) {
+						this.variables.push(i.id);
+					}
+				}
+				this.variables.push(r.id);
+			}
+			this.sectionData.push(sectionData);
+		}
+		this.raw = data;
+		this.data = {};
+		for (let i of this.variables) {
+			this.data[i] = 0;
+		}
+		this.cb = cb;
+		this.key = 0;
+	}
+	updateData(newData) {
+		this.data = newData;
+		this.cb();
+	}
+	dataUpdated(newValue, id) {
+		this.data[id] = newValue;
+		this.cb();
+	}
+}
 
 
 const dataMap = {
-	dmap, bitmap, dataNames, dataTypes, defaultAssistOption, defaultGamePieceOption, defaultClimbOption
+	dmap, dataNames, dataTypes, defaultAssistOption, defaultGamePieceOption, defaultClimbOption
 }
 
-module.exports = dataMap;
+//module.exports = dataMap;

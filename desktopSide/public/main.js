@@ -34,7 +34,7 @@ function getBitSizes(dataMap) {
 	return bitmap;
 }
 
-bitmap = getBitSizes(dataMap.dmap);
+bitmap = getBitSizes(dataMap.dmap.form);
 
 function generateBuffer(data) {
 	let length = 0;
