@@ -3,10 +3,10 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert } from 'rea
 import styles from './styles'
 import { AddMatchPopup, SetupPopup } from './popups';
 import DataEntry from './dataEntry';
-import { dmap } from './dataMap';
+import { dmap, dmaps} from './dataMap';
 import MatchList from './listMatches';
 import QRCodeGenerator from './qrCode';
-import * as SecureStore from 'expo-secure-store';
+import { AsyncStorage } from 'react-native';
 
 class ControlBar extends React.Component {
 	constructor(props) {
@@ -57,24 +57,30 @@ export default class MainScreen extends React.Component {
 		currentWindow: pages.homeScreen,
 		dataEntryIndex: -1,
 		matches: [],
-		wifiMode: false
+		wifiMode: false,
+		dataMap: {}
 	}
 	constructor(props) {
 		super(props);
 		const self = this;
-		SecureStore.getItemAsync("matches").then(function (matches) {
+		AsyncStorage.getItem("matches").then(function (matches) {
 			if (!matches) return;
 			if (matches != "null") self.setState({ matches: JSON.parse(matches) });
+		});
+		AsyncStorage.getItem("dataMap").then(function (d) {
+			if (!d) {
+				AsyncStorage.setItem("dataMap", dmaps);
+			}
 		});
 		//TODO: Add polling for wifi mode
 	}
 	modalCanceled() {
 		this.setState({ currentWindow: pages.homeScreen });
 	}
-	createMatch(teamNumber, matchNumber) {
+	createMatch(teamNumber, matchNumber, formType) {
 		this.setState({ currentWindow: pages.dataInput });
 		let newMatches = this.state.matches;
-		newMatches.push({ teamNumber, matchNumber, '#': true });
+		newMatches.push({ teamNumber, matchNumber, formType, '#': true });
 		this.setState({ matches: newMatches, dataEntryIndex: newMatches.length - 1 });
 	}
 	dataChange(match) {
@@ -82,14 +88,18 @@ export default class MainScreen extends React.Component {
 		newMatches[this.state.dataEntryIndex] = match;
 		this.setState({ matches: newMatches });
 	}
+	setWifiMode(wifiMode) {
+		this.setState({ wifiMode: wifiMode });
+		this.setState({ currentWindow: pages.homeScreen });
+	}
 	render() {
-		SecureStore.setItemAsync("matches", JSON.stringify(this.state.matches))
+		AsyncStorage.setItem("matches", JSON.stringify(this.state.matches))
 		const self = this;
 		if (this.state.currentWindow == pages.dataInput) {
 			return (
 				<View style={mainScreenStyles.mainScreen}>
 					<DataEntry
-						dataMap={dmap.form}
+						formType={this.state.matches[this.state.dataEntryIndex].formType}
 						return={() => this.setState({ currentWindow: pages.homeScreen })}
 						delete={() => {
 							let newMatches = this.state.matches;
@@ -155,7 +165,7 @@ export default class MainScreen extends React.Component {
 						height: "75%",
 						zIndex: 100,
 						...styles.align.center
-					}}><AddMatchPopup onCancel={() => this.modalCanceled()} onSubmit={(team, match) => this.createMatch(team, match)}></AddMatchPopup></View>
+					}}><AddMatchPopup onCancel={() => this.modalCanceled()} onSubmit={(team, match, type) => this.createMatch(team, match, type)}></AddMatchPopup></View>
 					: null}
 				
 				{/* Display the popup when doing setup */}
@@ -167,9 +177,8 @@ export default class MainScreen extends React.Component {
 						height: "75%",
 						zIndex: 100,
 						...styles.align.center
-					}}><SetupPopup wifiMode={this.state.wifiMode} onCancel={() => this.modalCanceled()} onSubmit={(wifiMode) => {
-						this.setState({ wifiMode: wifiMode });
-						this.setState({ currentWindow: pages.homeScreen });
+					}}><SetupPopup wifiMode={this.state.wifiMode} onUpdateDataMap={() => this.updateDataMap()} onCancel={() => this.modalCanceled()} onSubmit={(wifiMode) => {
+						this.setWifiMode(wifiMode);
 					}
 					}></SetupPopup></View>
 					: null}
@@ -180,7 +189,7 @@ export default class MainScreen extends React.Component {
 					flex: 1,
 					flexDirection: "row"
 				}}>
-					<ControlBar onSetup={() => this.setState({currentWindow: pages.setup})}onViewQRCode={() => this.setState({ currentWindow: pages.qrCode })} qrCodeExists={this.state.matches.length > 0} onAddMatch={
+					<ControlBar onSetup={() => this.setState({currentWindow: pages.setup})} onViewQRCode={() => this.setState({ currentWindow: pages.qrCode })} qrCodeExists={this.state.matches.length > 0} onAddMatch={
 						(() => this.setState({ currentWindow: pages.addNewMatch })).bind(this)
 					}></ControlBar>
 				</View>

@@ -80,7 +80,7 @@ export const dataTypes = {
 
 
 export const dmap = {
-	id: 0,
+	name: "Match Form",
 	form: [
 		{
 			title: "Sandstorm",
@@ -285,4 +285,4 @@ export const dmap = {
 	]
 }
 
-export const dmaps = {[dmap.id]: dmap};
+export const dmaps = { [dmap.id]: dmap };

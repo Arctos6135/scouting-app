@@ -142,7 +142,6 @@ function decodeBuffer(str) {
 	return output;
 }
 
-//Braindead decoder that assumes fully valid input
 function decodeUTF16LE(binaryStr) {
 	var cp = [];
 	for (var i = 0; i < binaryStr.length; i += 2) {

@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import styles from './styles'
 import * as inputs from './inputs.js'
+import { AsyncStorage } from 'react-native';
+const DATA_MAP_URL = "https://freetexthost.net/wfyRhlN";
 
 export const popupStyles = {
 	mainPopup: {
@@ -69,7 +71,14 @@ import { NetInfo } from 'react-native';
 export class AddMatchPopup extends React.Component {
 	state = {
 		teamNumber: 0,
-		matchNumber: 0
+		matchNumber: 0,
+		options: ["Loading"],
+		formType: "Loading"
+	}
+	componentDidMount() {
+		AsyncStorage.getItem("dataMap").then((d) => {
+			this.setState({ options: Object.keys(JSON.parse(d)), formType: Object.keys(JSON.parse(d))[0] });
+		})
 	}
 	render() {
 		let disabled = !(this.state.teamNumber && this.state.matchNumber);
@@ -83,6 +92,10 @@ export class AddMatchPopup extends React.Component {
 				</View>
 				{/* Actual data entry */}
 				<View style={popupStyles.inputs}>
+					{/* Form type */}
+					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={popupStyles.numberInput} label="Form type">
+						<inputs.PickerInput value={this.state.formType} options={this.state.options} onValueChange={(newFormType) => this.setState({ formType: newFormType })}></inputs.PickerInput>
+					</inputs.LabeledInput>
 					{/* Match number */}
 					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={popupStyles.numberInput} label="Enter a match number">
 						<inputs.NumberInput allowEmpty onValueChange={(newMatchNumber) => this.setState({ matchNumber: newMatchNumber })}></inputs.NumberInput>
@@ -108,7 +121,7 @@ export class AddMatchPopup extends React.Component {
 					{/* Submit button */}
 					<TouchableOpacity
 						disabled={disabled}
-						onPress={() => this.props.onSubmit(this.state.teamNumber, this.state.matchNumber)}
+						onPress={() => this.props.onSubmit(this.state.teamNumber, this.state.matchNumber, this.state.formType)}
 						style={popupStyles.button}
 					><Text
 							style={[{ ...popupStyles.buttonText, fontWeight: "bold" }, disabled ? { color: "#e0e0e0" } : null]}>
@@ -152,7 +165,7 @@ export class SetupPopup extends React.Component {
 				</View>
 				{/* Actual data entry */}
 				<View style={popupStyles.inputs}>
-					<TouchableOpacity onPress={this.props.onAddMatch} style={[{
+					<TouchableOpacity onPress={() => this.updateDataMap()} style={[{
 						justifyContent: "center",
 						alignItems: "center",
 						backgroundColor: styles.colors.secondary.bg,
@@ -172,11 +185,11 @@ export class SetupPopup extends React.Component {
 						<inputs.ToggleInput value={this.state.wifiMode} onValueChange={(useWifi) => this.setState({ wifiMode: useWifi })}></inputs.ToggleInput>
 					</inputs.LabeledInput>
 				</View>
-				<View style={{flexGrow: 2, alignItems: "flex-start", justifyContent: "flex-start", paddingHorizontal:25}}>
+				<ScrollView contentContainerStyle={{flexGrow: 2, alignItems: "flex-start", justifyContent: "flex-start", paddingHorizontal:25}}>
 					<Text>
 						{this.state.log}
 					</Text>
-				</View>
+				</ScrollView>
 				{/* Submit and cancel buttons */}
 				<View style={popupStyles.controlBar}>
 					{/* Cancel button */}
@@ -202,5 +215,23 @@ export class SetupPopup extends React.Component {
 				</View>
 			</View>
 		);
+	}
+
+	updateDataMap() {
+		console.log('updating data map');
+		this.setState({ log: this.state.log + "Updating data map\n" });
+		fetch(DATA_MAP_URL).then(r => r.text()).then(text => {
+			this.setState({ log: this.state.log + "Map loaded\n" });
+			let inner = text.replace(/[^]+<div id="paste">([^]+?)<\/div>[^]+/g, "$1");
+			let json = inner.replace(/(<\/?(span|p).*?>|&nbsp;)/g, "");
+			AsyncStorage.setItem("dataMap", json, (err) => {
+				if (err) {
+					this.setState({ log: this.state.log + "Error: " + err + "\n" });
+				}
+				else {
+					this.setState({ log: this.state.log + "Map stored\n" });
+				}
+			});
+		}).catch(err => console.error(err));
 	}
 }
