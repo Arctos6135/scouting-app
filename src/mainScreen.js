@@ -67,9 +67,12 @@ export default class MainScreen extends React.Component {
 			if (!matches) return;
 			if (matches != "null") self.setState({ matches: JSON.parse(matches) });
 		});
-		AsyncStorage.getItem("dataMap").then(function (d) {
+		AsyncStorage.getItem("dataMap").then((d) => {
 			if (!d) {
-				AsyncStorage.setItem("dataMap", dmaps);
+				AsyncStorage.setItem("dataMap", dmaps).then(() => this.updateDataMap());
+			}
+			else {
+				this.updateDataMap();
 			}
 		});
 		//TODO: Add polling for wifi mode
@@ -92,6 +95,11 @@ export default class MainScreen extends React.Component {
 		this.setState({ wifiMode: wifiMode });
 		this.setState({ currentWindow: pages.homeScreen });
 	}
+	updateDataMap() {
+		AsyncStorage.getItem("dataMap").then((d) => {
+			this.setState({ dataMap: JSON.parse(d) });
+		});
+	}
 	render() {
 		AsyncStorage.setItem("matches", JSON.stringify(this.state.matches))
 		const self = this;
@@ -113,7 +121,7 @@ export default class MainScreen extends React.Component {
 		}
 		else if (this.state.currentWindow == pages.qrCode) {
 			return <View style={mainScreenStyles.mainScreen}>
-				<QRCodeGenerator data={this.state.matches}
+				<QRCodeGenerator data={this.state.matches} forms={this.state.dataMap}
 					return={() => this.setState({ currentWindow: pages.homeScreen })} />
 			</View>
 		}

@@ -206,7 +206,6 @@ export default class DataEntry extends React.Component {
 	}
 	
 	parseDataMap(dataMap) {
-		console.log("Form #", dataMap.id);
 		this.dataMap = new DataMap(dataMap, () => {
 			this.props.onDataChange(this.dataMap.data);
 			this.setState();

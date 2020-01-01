@@ -1,52 +1,15 @@
-
-let bitmap = {};
-
-function getBits(component) {
-	let range;
-	if (component.type == 'picker') range = component.options.length;
-	else if (component.type == 'slider') range = component.range[1];
-	else if (component.type == 'toggle') {
-		range = 1;
-	}
-	else if (component.id) range = 255;
-	else range = 0;
-	return Math.floor(Math.log2(range)) + 1;
-}
-
-function getBitSizes(dataMap) {
-	let bitmap = {
-		matchNumber: 12,
-		teamNumber: 14
-	};
-	let d = new DataMap(dataMap, () => { });
-	for (let i of d.components) {
-		if (Array.isArray(i)) {
-			for (let j of i) {
-				if (!j.id) continue;
-				bitmap[j.id] = getBits(j);
-			}
-		}
-		else {
-			if (!i.id) continue;
-			bitmap[i.id] = getBits(i);
-		}
-	}
-	return bitmap;
-}
-
-bitmap = getBitSizes(dataMap.dmap.form);
-
-function generateBuffer(data) {
+function generateBuffer(data, bitmaps, formType, forms) {
+	//console.log(data);
+	const bitmap = bitmaps[formType];
 	let length = 0;
-	let buffer = [];
-
-	console.log(bitmap);
+	let buffer = [...forms[formType].id.toString(2).padStart(formTypeBits, '0')];
 
 	for (let i in bitmap) {
 		if (!i) continue;
 		buffer.push(...(Math.round(data[i] || 0).toString(2).padStart(bitmap[i], '0')));
-		console.log((Math.round(data[i] || 0).toString(2).padStart(bitmap[i], '0')), i, data[i]);
+		//console.log((Math.round(data[i] || 0).toString(2).padStart(bitmap[i], '0')), i, data[i]);
 	}
+	while (buffer.length % 16 != 0) buffer.push(0);
 	// Generate the string from that
 	let arr = new Uint16Array(Math.ceil(buffer.length / 16));
 	for (let i = 0; i < buffer.length; i++) {
@@ -54,58 +17,74 @@ function generateBuffer(data) {
 		arr[idx] <<= 1;
 		arr[idx] += parseInt(buffer[i]);
 	}
+	console.log(buffer);
 	let output = "";
 	for (let c of arr) output += String.fromCharCode(c);
 	return output;
 }
-function generateQRCode(allData) {
+function generateQRCode(allData, bitmaps, forms) {
 	let data = [];
 	for (let i in allData) {
 		if (!allData[i].deleted) data.push(allData[i]);
 	}
 	let output = String.fromCharCode(data.length);
 	for (let i in data) {
-		output += generateBuffer(data[i]);
+		output += generateBuffer(data[i], bitmaps, data[i].formType, forms);
 	}
-	console.log(data.length);
+	console.log(output);
 	return output;
 }
-function getBitLength() {
+function getBitLength(bitmap) {
 	let length = 0;
 	for (let i in bitmap) {
 		length += bitmap[i];
 	}
-	length = Math.ceil(length / 16);
-	return length;
+	return Math.ceil((length + 4) / 16) * 16 - 4;
 }
-function decodeQRCode(message) {
-	let length = getBitLength();
+
+function getFormNameFromID(formID, forms) {
+	let name;
+
+	for (let i in forms) {
+		if (formID == forms[i].id) {
+			name = i;
+			console.log(i, formID);
+			break;
+		}
+	}
+	if (!name) throw new Error("Form type " + formID + " doesn't exist")
+	return name
+}
+
+function decodeQRCode(message, bitmaps, forms) {
 	let output = [];
 	let m = message.slice(1);
-	for (let i = 0; i < message.charCodeAt(0); i++) {
-		output.push(decodeBuffer(m.slice(0, length)));
-		m = m.slice(length);
-	}
-	return output;
-}
-function decodeBuffer(str) {
-	console.log(bitmap);
-	let length = getBitLength();
 	// Get the array of 1s and zeros
-	let arr = new Uint16Array(str.length);
-	for (let i in str) {
-		arr[i] = str.charCodeAt(i);
+	let arr = new Uint16Array(m.length);
+	for (let i in m) {
+		arr[i] = m.charCodeAt(i);
 	}
 	let buffer = [];
 	for (let i in arr) {
 		buffer.push(arr[i].toString(2).padStart(16, '0'));
 	}
-
 	buffer = buffer.join("");
+	console.log(buffer.length);
+	for (let i = 0; i < message.charCodeAt(0); i++) {
+		console.log(buffer.slice(0, formTypeBits));
+		let name = getFormNameFromID(parseInt(buffer.slice(0, formTypeBits), 2), forms)
+		buffer = buffer.slice(formTypeBits);
+
+		let length = getBitLength(bitmaps[name]);
+		output.push(decodeBuffer(buffer.slice(0, length), bitmaps[name], forms[name].form));
+		buffer = buffer.slice(length);
+	}
+	return output;
+}
+function decodeBuffer(buffer, bitmap, form) {
 	let values = {};
 	let idx = 0;
 	for (let i in bitmap) {
-		console.log(i);
 		if (!i) continue;
 
 		let d = parseInt(buffer.slice(idx, idx + bitmap[i]), 2);
@@ -116,11 +95,11 @@ function decodeBuffer(str) {
 	let output = {};
 
 	// The object is all numbers, so it should turn it back into usable values
-	for (let i in dataMap.dmap.form) {
-		for (let j in dataMap.dmap.form[i].rows) {
+	for (let i in form) {
+		for (let j in form[i].rows) {
 			let components = [];
-			if (Array.isArray(dataMap.dmap.form[i].rows[j])) components = dataMap.dmap.form[i].rows[j];
-			else components = [dataMap.dmap.form[i].rows[j]];
+			if (Array.isArray(form[i].rows[j])) components = form[i].rows[j];
+			else components = [form[i].rows[j]];
 			for (let c of components) {
 				switch (c.type) {
 					case "picker":
@@ -234,8 +213,8 @@ function done() {
 		return;
 	}
 	totalQRCodes = 0;
-	console.log(decodeQRCode(games));
-	let matches = decodeQRCode(games)
+	console.log(decodeQRCode(games, bitmaps, forms));
+	let matches = decodeQRCode(games, bitmaps, forms)
 	// Check if match is already entered
 	for (let i = 0; i < matches.length; i++) {
 		let entered = false;

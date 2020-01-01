@@ -229,6 +229,7 @@ export class SetupPopup extends React.Component {
 					this.setState({ log: this.state.log + "Error: " + err + "\n" });
 				}
 				else {
+					this.props.onUpdateDataMap();
 					this.setState({ log: this.state.log + "Map stored\n" });
 				}
 			});
