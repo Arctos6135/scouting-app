@@ -251,6 +251,52 @@ function returnDataMap() {
 						]
 					]
 				},
+				{
+					"title": "Attributes",
+					"rows": [
+						{
+							"title": "Did the robot break?",
+							"type": "toggle",
+							"options": [
+								"No",
+								"Yes"
+							],
+							"id": "ab"
+						},
+						{
+							"title": "Did the robot tip?",
+							"type": "toggle",
+							"options": [
+								"No",
+								"Yes"
+							],
+							"id": "at"
+						},
+						{
+							"title": "Can it pick up hatches from the floor?",
+							"type": "toggle",
+							"options": [
+								"No",
+								"Yes"
+							],
+							"id": "af"
+						},
+						{
+							"title": "Time spent on opponents side of field",
+							"type": "timer",
+							"id": "as"
+						},
+						{
+							"title": "Number of hatches dropped",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "ah"
+						}
+					]
+				}
 			]
 		},
 		"Other Data": {
