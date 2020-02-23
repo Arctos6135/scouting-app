@@ -328,6 +328,312 @@ function returnDataMap() {
 					]
 				}
 			]
+		},
+		"2020 form": {
+			"id": 2,
+			"form": [
+				{
+					"title": "Auto",
+					"rows": [
+						{
+							"title": "Preloaded balls",
+							"type": "slider",
+							"range": [
+								0,
+								3
+							],
+							"increment": 1,
+							"id": "apb" // auto preloaded balls
+						},
+						{
+							"title": "Moved off of line?",
+							"type": "toggle",
+							"options": [
+								"No",
+								"Yes"
+							],
+							"id": "aml" // auto moved line
+						},
+
+
+						{
+							"title": "Balls attempted from:",
+							"type": "text"
+						},
+
+						{
+							"title": "Close side of trench",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aactl" // auto attempted close trench low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aacth" // auto attempted close trench high
+							},
+						],
+
+						{
+							"title": "Far side of trench",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aaftl" // auto attempted far trench low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aafth" // auto attempted far trench high
+							},
+						],
+
+						{
+							"title": "Rendezvous",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aarl" // auto attempted rendezvous low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aarh" // auto attempted rendezvous high
+							},
+						],
+
+						{
+							"title": "Cross court",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aaccl" // auto attempted cross court low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aacch" // auto attempted cross court high
+							},
+						],
+
+
+						{
+							"title": "",
+							"type": "text"
+						},
+
+
+						{
+							"title": "Balls scored from:",
+							"type": "text"
+						},
+
+						{
+							"title": "Close side of trench",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "asctl" // auto scored close trench low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "ascth" // auto scored close trench high
+							},
+						],
+
+						{
+							"title": "Far side of trench",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "asftl" // auto scored far trench low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "asfth" // auto scored far trench high
+							},
+						],
+
+						{
+							"title": "Rendezvous",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "asrl" // auto scored rendezvous low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "asrh" // auto scored rendezvous high
+							},
+						],
+
+						{
+							"title": "Cross court",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "asccl" // auto scored cross court low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "ascch" // auto scored cross court high
+							},
+						],
+
+
+						{
+							"title": "",
+							"type": "text"
+						},
+
+
+						{
+							"title": "Refuel from:",
+							"type": "text"
+						},
+						{
+							"title": "Close side of trench",
+							"type": "toggle",
+							"options": [
+								"No",
+								"Yes"
+							],
+							"id": "arct" // auto refuel close trench 
+						},
+						{
+							"title": "Far side of trench",
+							"type": "toggle",
+							"options": [
+								"No",
+								"Yes"
+							],
+							"id": "arft" // auto refuel far trench 
+						},
+						{
+							"title": "Rendezvous",
+							"type": "toggle",
+							"options": [
+								"No",
+								"Yes"
+							],
+							"id": "arr" // auto refuel rendezvous 
+						},
+						{
+							"title": "Alliance partner",
+							"type": "toggle",
+							"options": [
+								"No",
+								"Yes"
+							],
+							"id": "arp" // auto refuel partner 
+						},
+
+						{
+							"title": "Did they dispense to alliance partners?",
+							"type": "picker",
+							"options": [
+								"No",
+								"Attempted",
+								"Successful"
+							],
+							"id": "adp" // auto dispense partner
+						},
+					]
+				}
+			]
 		}
 	}
 	
