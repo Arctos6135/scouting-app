@@ -3,7 +3,10 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-nati
 import styles from './styles'
 import * as inputs from './inputs.js'
 import { AsyncStorage } from 'react-native';
+import * as FileSystem from 'expo-file-system';
+
 const DATA_MAP_URL = "https://freetexthost.net/wfyRhlN";
+const DEBUG_DATA_MAP_JSON = true; // if true, reads data map from a local json file
 
 export const popupStyles = {
 	mainPopup: {
@@ -66,6 +69,7 @@ export const popupStyles = {
 }
 
 import { NetInfo } from 'react-native';
+import returnDataMap from './localDataMap';
 
 
 export class AddMatchPopup extends React.Component {
@@ -220,10 +224,11 @@ export class SetupPopup extends React.Component {
 	updateDataMap() {
 		console.log('updating data map');
 		this.setState({ log: this.state.log + "Updating data map\n" });
-		fetch(DATA_MAP_URL).then(r => r.text()).then(text => {
-			this.setState({ log: this.state.log + "Map loaded\n" });
-			let inner = text.replace(/[^]+<div id="paste">([^]+?)<\/div>[^]+/g, "$1");
-			let json = inner.replace(/(<\/?(span|p).*?>|&nbsp;)/g, "");
+		
+		if (DEBUG_DATA_MAP_JSON) {
+			json = JSON.stringify(returnDataMap());
+			console.log(json);
+
 			AsyncStorage.setItem("dataMap", json, (err) => {
 				if (err) {
 					this.setState({ log: this.state.log + "Error: " + err + "\n" });
@@ -233,6 +238,22 @@ export class SetupPopup extends React.Component {
 					this.setState({ log: this.state.log + "Map stored\n" });
 				}
 			});
-		}).catch(err => console.error(err));
+		}
+		else {
+			fetch(DATA_MAP_URL).then(r => r.text()).then(text => {
+				this.setState({ log: this.state.log + "Map loaded\n" });
+				let inner = text.replace(/[^]+<div id="paste">([^]+?)<\/div>[^]+/g, "$1");
+				let json = inner.replace(/(<\/?(span|p).*?>|&nbsp;)/g, "");
+				AsyncStorage.setItem("dataMap", json, (err) => {
+					if (err) {
+						this.setState({ log: this.state.log + "Error: " + err + "\n" });
+					}
+					else {
+						this.props.onUpdateDataMap();
+						this.setState({ log: this.state.log + "Map stored\n" });
+					}
+				});
+			}).catch(err => console.error(err));
+		}
 	}
 }
