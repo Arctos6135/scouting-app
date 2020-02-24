@@ -1,3 +1,5 @@
+import console = require("console");
+
 function returnDataMap() {
 	const dataMap = {
 		"Match Form": {
@@ -978,7 +980,7 @@ function returnDataMap() {
 								"No",
 								"Yes"
 							],
-							"id": "at" // atrribute trench
+							"id": "ad" // atrribute drive
 						},
 						{
 							"title": "Did they break?",
@@ -1005,6 +1007,10 @@ function returnDataMap() {
 	}
 	
 	return dataMap;
+}
+
+if (require.main === module) {
+	console.log(returnDataMap());
 }
 
 export default returnDataMap;
