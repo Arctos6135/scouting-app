@@ -170,7 +170,7 @@ app.get('/map.js', function (req, res) {
 		if (err) {
 			fs.readFile('./datamap.json', (err, d) => res.send(genMapJS(d)));
 		} else {
-			request('https://freetexthost.net/wfyRhlN', function (err, r) {
+			request('https://freetexthost.net/IeXqmCs', function (err, r) {
 
 				if (err) {
 					throw err;

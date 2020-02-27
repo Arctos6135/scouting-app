@@ -6,7 +6,7 @@ import { AsyncStorage } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 
 const DATA_MAP_URL = "https://freetexthost.net/IeXqmCs";
-const DEBUG_DATA_MAP_JSON = false; // if true, reads data map from a local json file
+const DEBUG_DATA_MAP_JSON = true; // if true, reads data map from a local json file
 
 export const popupStyles = {
 	mainPopup: {

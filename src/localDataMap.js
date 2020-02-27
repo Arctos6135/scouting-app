@@ -1,5 +1,3 @@
-import console = require("console");
-
 function returnDataMap() {
 	const dataMap = {
 		"Match Form": {
@@ -641,9 +639,59 @@ function returnDataMap() {
 					"title": "Teleop",
 					"rows": [
 						{
-							"title": "Balls attempted from:",
+							"title": "Balls ATTEMPTED from:",
 							"type": "text"
 						},
+
+						{
+							"title": "Sector",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tasl" // teleop attempted sector low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tash" // teleop attempted sector high
+							},
+						],
+
+						{
+							"title": "Target zone",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tatzl" // teleop attempted target zone low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tatzh" // teleop attempted target zone high
+							},
+						],
 
 						{
 							"title": "Close side of trench",
@@ -696,6 +744,56 @@ function returnDataMap() {
 						],
 
 						{
+							"title": "Close side of OPPONENT trench",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tacotl" // teleop attempted close opponent trench low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tacoth" // teleop attempted close opponent trench high
+							},
+						],
+
+						{
+							"title": "Far side of OPPONENT trench",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tafotl" // teleop attempted far opponent trench low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tafoth" // teleop attempted far opponent trench high
+							},
+						],
+
+						{
 							"title": "Rendezvous",
 							"type": "text",
 						},
@@ -721,7 +819,7 @@ function returnDataMap() {
 						],
 
 						{
-							"title": "Cross court",
+							"title": "Behind the rendezvous",
 							"type": "text",
 						},
 						[
@@ -732,7 +830,7 @@ function returnDataMap() {
 									-1,
 									1
 								],
-								"id": "taccl" // teleop attempted cross court low
+								"id": "tabrl" // teleop attempted behind rendezvous low
 							},
 							{
 								"title": "High",
@@ -741,7 +839,32 @@ function returnDataMap() {
 									-1,
 									1
 								],
-								"id": "tacch" // teleop attempted cross court high
+								"id": "tabrh" // teleop attempted behind rendezvous high
+							},
+						],
+
+						{
+							"title": "In front of rendezvous",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tafrl" // teleop attempted front rendezvous low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tafrh" // teleop attempted front rendezvous high
 							},
 						],
 
@@ -753,9 +876,59 @@ function returnDataMap() {
 
 
 						{
-							"title": "Balls scored from:",
+							"title": "Balls SCORED from:",
 							"type": "text"
 						},
+
+						{
+							"title": "Sector",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tssl" // teleop scored sector low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tssh" // teleop scored sector high
+							},
+						],
+
+						{
+							"title": "Target Zone",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tstzl" // teleop scored target zone low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tstzh" // teleop scored target zone high
+							},
+						],
 
 						{
 							"title": "Close side of trench",
@@ -808,6 +981,56 @@ function returnDataMap() {
 						],
 
 						{
+							"title": "Close side of OPPONENT trench",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tscotl" // teleop scored close opponent trench low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tscoth" // teleop scored close opponent trench high
+							},
+						],
+
+						{
+							"title": "Far side of OPPONENT trench",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tsfotl" // teleop scored far opponent trench low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tsfoth" // teleop scored far opponent trench high
+							},
+						],
+
+						{
 							"title": "Rendezvous",
 							"type": "text",
 						},
@@ -833,7 +1056,7 @@ function returnDataMap() {
 						],
 
 						{
-							"title": "Cross court",
+							"title": "Behind the rendezvous",
 							"type": "text",
 						},
 						[
@@ -844,7 +1067,7 @@ function returnDataMap() {
 									-1,
 									1
 								],
-								"id": "tsccl" // teleop scored cross court low
+								"id": "tsbrl" // teleop scored behind rendezvous low
 							},
 							{
 								"title": "High",
@@ -853,9 +1076,35 @@ function returnDataMap() {
 									-1,
 									1
 								],
-								"id": "tscch" // teleop scored cross court high
+								"id": "tsbrh" // teleop scored behind rendezvous high
 							},
 						],
+
+						{
+							"title": "In front of the rendezvous",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tsfrl" // teleop scored front rendezvous low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tsfrh" // teleop scored front rendezvous high
+							},
+						],
+
 
 						{
 							"title": "Refuel from:",
@@ -896,7 +1145,7 @@ function returnDataMap() {
 					"title": "Control Panel",
 					"rows": [
 						{
-							"title": "Spin?",
+							"title": "Rotation?",
 							"type": "toggle",
 							"options": [
 								"No",
