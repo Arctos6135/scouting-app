@@ -40,7 +40,7 @@ export const popupStyles = {
 		alignItems: "flex-end"
 	},
 	inputs: {
-		flex: 3,
+		flex: 2,
 		flexDirection: 'column',
 		width: '100%',
 		padding: 25,
@@ -77,12 +77,12 @@ export class AddMatchPopup extends React.Component {
 		teamNumber: 0,
 		matchNumber: 0,
 		options: ["Loading"],
-		formType: "Loading"
+		formType: "2020 form"
 	}
 	componentDidMount() {
-		AsyncStorage.getItem("dataMap").then((d) => {
+		/*AsyncStorage.getItem("dataMap").then((d) => {
 			this.setState({ options: Object.keys(JSON.parse(d)), formType: Object.keys(JSON.parse(d))[0] });
-		})
+		})*/
 	}
 	render() {
 		let disabled = !(this.state.teamNumber && this.state.matchNumber);
@@ -97,9 +97,9 @@ export class AddMatchPopup extends React.Component {
 				{/* Actual data entry */}
 				<View style={popupStyles.inputs}>
 					{/* Form type */}
-					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={popupStyles.numberInput} label="Form type">
+					{/*<inputs.LabeledInput textStyle={styles.font.inputHeader} style={popupStyles.numberInput} label="Form type">
 						<inputs.PickerInput value={this.state.formType} options={this.state.options} onValueChange={(newFormType) => this.setState({ formType: newFormType })}></inputs.PickerInput>
-					</inputs.LabeledInput>
+		</inputs.LabeledInput>*/}
 					{/* Match number */}
 					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={popupStyles.numberInput} label="Enter a match number">
 						<inputs.NumberInput allowEmpty onValueChange={(newMatchNumber) => this.setState({ matchNumber: newMatchNumber })}></inputs.NumberInput>
