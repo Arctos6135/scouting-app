@@ -77,12 +77,12 @@ export class AddMatchPopup extends React.Component {
 		teamNumber: 0,
 		matchNumber: 0,
 		options: ["Loading"],
-		formType: "2020 form"
+		formType: "Loading"
 	}
 	componentDidMount() {
-		/*AsyncStorage.getItem("dataMap").then((d) => {
-			this.setState({ options: Object.keys(JSON.parse(d)), formType: Object.keys(JSON.parse(d))[0] });
-		})*/
+		AsyncStorage.getItem("dataMap").then((d) => {
+			this.setState({ options: Object.keys(JSON.parse(d)), formType: Object.keys(JSON.parse(d))[2] }); // id 2 is the 2020 form
+		})
 	}
 	render() {
 		let disabled = !(this.state.teamNumber && this.state.matchNumber);
@@ -96,10 +96,6 @@ export class AddMatchPopup extends React.Component {
 				</View>
 				{/* Actual data entry */}
 				<View style={popupStyles.inputs}>
-					{/* Form type */}
-					{/*<inputs.LabeledInput textStyle={styles.font.inputHeader} style={popupStyles.numberInput} label="Form type">
-						<inputs.PickerInput value={this.state.formType} options={this.state.options} onValueChange={(newFormType) => this.setState({ formType: newFormType })}></inputs.PickerInput>
-		</inputs.LabeledInput>*/}
 					{/* Match number */}
 					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={popupStyles.numberInput} label="Enter a match number">
 						<inputs.NumberInput allowEmpty onValueChange={(newMatchNumber) => this.setState({ matchNumber: newMatchNumber })}></inputs.NumberInput>
@@ -107,6 +103,10 @@ export class AddMatchPopup extends React.Component {
 					{/* Team number */}
 					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={popupStyles.numberInput} label="Enter a team number">
 						<inputs.NumberInput allowEmpty onValueChange={(newTeamNumber)=>this.setState({teamNumber: newTeamNumber})}></inputs.NumberInput>
+					</inputs.LabeledInput>
+					{/* Form type */}
+					<inputs.LabeledInput textStyle={styles.font.inputHeader} style={popupStyles.numberInput} label="Form type">
+						<inputs.PickerInput value={this.state.formType} options={this.state.options} onValueChange={(newFormType) => this.setState({ formType: newFormType })}></inputs.PickerInput>
 					</inputs.LabeledInput>
 				</View>
 				{/* Submit and cancel buttons */}
