@@ -19,55 +19,110 @@ app.get('/', function (req, res) {
 });
 //TODO: Make this work
 function jsonToCSV(json) {
+	const yes_no = [
+		"aml",
+		"arct",
+		"arft",
+		"arr",
+		"arp",
+		"trg",
+		"trh",
+		"tps",
+		"tpp",
+		"lt",
+		"ao",
+		"ad",
+		"ab",
+		"at"
+	] // all the variables that are either yes or no and are converted to 1 or 0
+
 	let output = '';
 	for (let i in json) {
-		output += json[i][datamap.dataNames.matchInfo.teamNumber] +
-			','
-			+ json[i][datamap.dataNames.matchInfo.matchNumber] + ','
-			+ json[i][datamap.dataNames.startLevel[0]] + ',';
-		let hatches = [0, 0, 0, 0, 0];
-		for (let j in datamap.dataNames.hatch) {
-			hatches[json[i][datamap.dataNames.hatch[j]]]++;
-		}
-		// Swap cargo ship and the rockets
-		let temp = hatches[1];
-		hatches[1] = hatches[4];
-		hatches[4] = temp;
-		output += hatches.slice(1).join(',') + ',';
+		console.log("i is", i)
+		let match = json[i]
+		console.log("match is", match)
+		let entries = Object.entries(match)
 
-		let cargos = [0, 0, 0, 0, 0];
-		for (let j in datamap.dataNames.cargo) {
-			cargos[json[i][datamap.dataNames.cargo[j]]]++;
-		}
-		// Swap cargo ship and the rockets
-		temp = cargos[1];
-		cargos[1] = cargos[4];
-		cargos[4] = temp;
-		output += cargos.slice(1).join(',');
+		output += match.teamNumber + ',' + match.matchNumber + ','
+		
+		for (let en in entries) {
+			e = entries[en]
+			console.log("entry is", e)
+			// e[0] is the key, e[1] is the value
+			let v; // the value that will go in this column
 
-		// Tele-op
-		output += ',' + json[i][datamap.dataNames.shipHatch[0]];
-		for (let j in datamap.dataNames.rocketHatch) {
-			output += ',' + json[i][datamap.dataNames.rocketHatch[j]];
-		}
-		output += ',' + json[i][datamap.dataNames.shipCargo[0]];
-		for (let j in datamap.dataNames.rocketCargo) {
-			output += ',' + json[i][datamap.dataNames.rocketCargo[j]];
-		}
-		output += ',' + json[i][datamap.dataNames.gameInfo.opposingSideTime];
-		output += ',' +
-			(json[i][datamap.dataNames.climbing.assist] > 0 ?
-				json[i][datamap.dataNames.climbing.assist] + 1 :
-				json[i][datamap.dataNames.climbing.assist]);
+			if (yes_no.includes(e[0])) {
+				v = (e[1] === "Yes") ? 1 : 0; 
+			}
+			else if (e[0] === "adp" || e[0] === "tdp") { // dispense to alliance partners in auto and teleop, respectively
+				/* 
+				two columns, attempted and successful
+				if no, 0 in both
+				if attempted, 1 and then 0
+				if successful, 0 and then 1
+				*/
+				if (e[1] === "No") {
+					v = "0,0"
+				}
+				else if (e[1] === "Attempted") {
+					v = "1,0"
+				}
+				else {
+					v = "0,1"
+				}
+			}
+			else if (e[0] === "el") { // endgame level
+				/*
+				two columns, park and hang
+				if none, 0 in both
+				if park, 1 and 0
+				if hang, 0 and 1
+				*/
+				if (e[1] === "None") {
+					v = "0,0"
+				}
+				else if (e[1] === "Park") {
+					v = "1,0"
+				}
+				else {
+					v = "0,1"
+				}
+			}
+			else if (e[0] == "ea") { // endgame assist
+				/*
+				two columns, was assisted and assisted another
+				if none, 0 in both
+				if was assisted, 1 and 0
+				if assisted another, 0 and 1
+				*/
+				if (e[1] === "None") {
+					v = "0,0"
+				}
+				else if (e[1] === "Was assisted") {
+					v = "1,0"
+				}
+				else if (e[1] === "Assisted another") {
+					v = "0,1"
+				}
+			}
+			else if (e[0] === "teamNumber" || e[0] === "matchNumber") {
+				continue; // we already added team and match number
+			} 
+			else { // all the other numerical values
+				v = e[1]
+			}
+			console.log("v is", v)
 
-		output += ',' + json[i][datamap.dataNames.climbing.levelReached];
-		output += ',' + Number(json[i][datamap.dataNames.attributes.tip]);
+			v += "," // add a trailing comma
+			output += v // append the value(s) to the output
+		}
+		
+		// remove a trailing comma at the end of the row if it exists
+		if (output.charAt(output.length - 1) === ",") {
+			output = output.substring(0, output.length-1)
+		}
 
-		output += ',' + Number(json[i][datamap.dataNames.attributes.broken]);
-		output += ',' + Number(json[i][datamap.dataNames.attributes.hatchesFromFloor]);
-		//output += ',' + Number(json[i][datamap.dataNames.attributes.cargoFromDepot]);
-		//output += ',' + json[i][datamap.dataNames.gameInfo.penaltyPoints];
-		output += ',' + json[i][datamap.dataNames.gameInfo.hatchesDropped];
+		// finish the row with a newline
 		output += '\n';
 	}
 	return output;
