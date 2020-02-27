@@ -273,7 +273,7 @@ function returnDataMap() {
 								],
 								"id": "at"
 							},
-						],	
+						],
 						{
 							"title": "Can it pick up hatches from the floor?",
 							"type": "toggle",
@@ -364,6 +364,56 @@ function returnDataMap() {
 						},
 
 						{
+							"title": "Sector",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aasl" // auto attempted sector low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aash" // auto attempted sector high
+							},
+						],
+
+						{
+							"title": "Target zone",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aatzl" // auto attempted target zone low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aatzh" // auto attempted target zone high
+							},
+						],
+
+						{
 							"title": "Close side of trench",
 							"type": "text",
 						},
@@ -414,6 +464,56 @@ function returnDataMap() {
 						],
 
 						{
+							"title": "Close side of OPPONENT trench",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aacotl" // auto attempted close opponent trench low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aacoth" // auto attempted close opponent trench high
+							},
+						],
+
+						{
+							"title": "Far side of OPPONENT trench",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aafotl" // auto attempted far opponent trench low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aafoth" // auto attempted far opponent trench high
+							},
+						],
+
+						{
 							"title": "Rendezvous",
 							"type": "text",
 						},
@@ -439,7 +539,7 @@ function returnDataMap() {
 						],
 
 						{
-							"title": "Cross court",
+							"title": "Behind the rendezvous",
 							"type": "text",
 						},
 						[
@@ -450,7 +550,7 @@ function returnDataMap() {
 									-1,
 									1
 								],
-								"id": "aaccl" // auto attempted cross court low
+								"id": "aabrl" // auto attempted behind rendezvous low
 							},
 							{
 								"title": "High",
@@ -459,7 +559,32 @@ function returnDataMap() {
 									-1,
 									1
 								],
-								"id": "aacch" // auto attempted cross court high
+								"id": "aabrh" // auto attempted behind rendezvous high
+							},
+						],
+
+						{
+							"title": "In front of rendezvous",
+							"type": "text",
+						},
+						[
+							{
+								"title": "Low",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aafrl" // auto attempted front rendezvous low
+							},
+							{
+								"title": "High",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "aafrh" // auto attempted front rendezvous high
 							},
 						],
 
@@ -476,27 +601,104 @@ function returnDataMap() {
 						},
 
 						{
-							"title": "Close side of trench",
+							"title": "Sector",
 							"type": "text",
+						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "assl" // auto scored sector low
 						},
 						[
 							{
-								"title": "Low",
+								"title": "Outer",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "asctl" // auto scored close trench low
+								"id": "asso" // auto scored sector outer
 							},
 							{
-								"title": "High",
+								"title": "Inner",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "ascth" // auto scored close trench high
+								"id": "assi" // auto scored sector inner
+							},
+						],
+
+						{
+							"title": "Target zone",
+							"type": "text",
+						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "astzl" // auto scored target zone low
+						},
+						[
+							{
+								"title": "Outer",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "astzo" // auto scored target zone outer
+							},
+							{
+								"title": "Inner",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "astzi" // auto scored target zone inner
+							},
+						],
+
+						{
+							"title": "Close side of trench",
+							"type": "text",
+						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "asctl" // auto scored close trench low
+						},
+						[
+							{
+								"title": "Outer",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "ascto" // auto scored close trench outer
+							},
+							{
+								"title": "Inner",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "ascti" // auto scored close trench inner
 							},
 						],
 
@@ -504,24 +706,101 @@ function returnDataMap() {
 							"title": "Far side of trench",
 							"type": "text",
 						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "asftl" // auto scored far trench low
+						},
 						[
 							{
-								"title": "Low",
+								"title": "Outer",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "asftl" // auto scored far trench low
+								"id": "asfti" // auto scored far trench outer
 							},
 							{
-								"title": "High",
+								"title": "Inner",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "asfth" // auto scored far trench high
+								"id": "asfti" // auto scored far trench inner
+							},
+						],
+
+						{
+							"title": "Close side of OPPONENT trench",
+							"type": "text",
+						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "ascotl" // auto scored close opponent trench low
+						},
+						[
+							{
+								"title": "Outer",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "ascoti" // auto scored close opponent trench outer
+							},
+							{
+								"title": "Inner",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "ascoti" // auto scored close opponent trench inner
+							},
+						],
+
+						{
+							"title": "Far side of OPPONENT trench",
+							"type": "text",
+						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "asfotl" // auto scored far opponent trench low
+						},
+						[
+							{
+								"title": "Outer",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "asfoti" // auto scored far opponent trench outer
+							},
+							{
+								"title": "Inner",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "asfoti" // auto scored far opponent trench inner
 							},
 						],
 
@@ -529,49 +808,101 @@ function returnDataMap() {
 							"title": "Rendezvous",
 							"type": "text",
 						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "asrl" // auto scored rendezvous low
+						},
 						[
 							{
-								"title": "Low",
+								"title": "Outer",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "asrl" // auto scored rendezvous low
+								"id": "asro" // auto scored rendezvous outer
 							},
 							{
-								"title": "High",
+								"title": "Inner",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "asrh" // auto scored rendezvous high
+								"id": "asri" // auto scored rendezvous inner
 							},
 						],
 
 						{
-							"title": "Cross court",
+							"title": "Behind the rendezvous",
 							"type": "text",
+						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "asbrl" // auto scored behind rendezvous low
 						},
 						[
 							{
-								"title": "Low",
+								"title": "Outer",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "asccl" // auto scored cross court low
+								"id": "asbro" // auto scored behind rendezvous outer
 							},
 							{
-								"title": "High",
+								"title": "Inner",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "ascch" // auto scored cross court high
+								"id": "asbri" // auto scored behind rendezvous inner
+							},
+						],
+
+						{
+							"title": "In front of the rendezvous",
+							"type": "text",
+						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "asfrl" // auto scored front rendezvous low
+						},
+						[
+							{
+								"title": "Outer",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "asfro" // auto scored front rendezvous outer
+							},
+							{
+								"title": "Inner",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "asfri" // auto scored front rendezvous inner
 							},
 						],
 
@@ -635,6 +966,7 @@ function returnDataMap() {
 						},
 					]
 				},
+				/* TELEOP STARTS HERE */
 				{
 					"title": "Teleop",
 					"rows": [
@@ -884,24 +1216,33 @@ function returnDataMap() {
 							"title": "Sector",
 							"type": "text",
 						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "tssl" // teleop scored sector low
+						},
 						[
 							{
-								"title": "Low",
+								"title": "Outer",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tssl" // teleop scored sector low
+								"id": "tsso" // teleop scored sector outer
 							},
 							{
-								"title": "High",
+								"title": "Inner",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tssh" // teleop scored sector high
+								"id": "tssi" // teleop scored sector inner
 							},
 						],
 
@@ -909,24 +1250,33 @@ function returnDataMap() {
 							"title": "Target Zone",
 							"type": "text",
 						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "tstzl" // teleop scored target zone low
+						},
 						[
 							{
-								"title": "Low",
+								"title": "Outer",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tstzl" // teleop scored target zone low
+								"id": "tstzo" // teleop scored target zone outer
 							},
 							{
-								"title": "High",
+								"title": "Inner",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tstzh" // teleop scored target zone high
+								"id": "tstzi" // teleop scored target zone inner
 							},
 						],
 
@@ -934,24 +1284,33 @@ function returnDataMap() {
 							"title": "Close side of trench",
 							"type": "text",
 						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "tsctl" // teleop scored close trench low
+						},
 						[
 							{
-								"title": "Low",
+								"title": "Outer",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tsctl" // teleop scored close trench low
+								"id": "tscto" // teleop scored close trench outer
 							},
 							{
-								"title": "High",
+								"title": "Inner",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tscth" // teleop scored close trench high
+								"id": "tscti" // teleop scored close trench inner
 							},
 						],
 
@@ -959,24 +1318,33 @@ function returnDataMap() {
 							"title": "Far side of trench",
 							"type": "text",
 						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "tsftl" // teleop scored far trench low
+						},
 						[
 							{
-								"title": "Low",
+								"title": "Outer",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tsftl" // teleop scored far trench low
+								"id": "tsfto" // teleop scored far trench outer
 							},
 							{
-								"title": "High",
+								"title": "Inner",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tsfth" // teleop scored far trench high
+								"id": "tsfti" // teleop scored far trench inner
 							},
 						],
 
@@ -984,24 +1352,33 @@ function returnDataMap() {
 							"title": "Close side of OPPONENT trench",
 							"type": "text",
 						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "tscotl" // teleop scored close opponent trench low
+						},
 						[
 							{
-								"title": "Low",
+								"title": "Outer",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tscotl" // teleop scored close opponent trench low
+								"id": "tscoto" // teleop scored close opponent trench outer
 							},
 							{
-								"title": "High",
+								"title": "Inner",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tscoth" // teleop scored close opponent trench high
+								"id": "tscoti" // teleop scored close opponent trench inner
 							},
 						],
 
@@ -1009,16 +1386,16 @@ function returnDataMap() {
 							"title": "Far side of OPPONENT trench",
 							"type": "text",
 						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "tsfotl" // teleop scored far opponent trench low
+						},
 						[
-							{
-								"title": "Low",
-								"type": "number",
-								"increments": [
-									-1,
-									1
-								],
-								"id": "tsfotl" // teleop scored far opponent trench low
-							},
 							{
 								"title": "High",
 								"type": "number",
@@ -1026,7 +1403,16 @@ function returnDataMap() {
 									-1,
 									1
 								],
-								"id": "tsfoth" // teleop scored far opponent trench high
+								"id": "tsfoto" // teleop scored far opponent trench outer
+							},
+							{
+								"title": "Inner",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tsfoti" // teleop scored far opponent trench inner
 							},
 						],
 
@@ -1034,16 +1420,16 @@ function returnDataMap() {
 							"title": "Rendezvous",
 							"type": "text",
 						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "tsrl" // teleop scored rendezvous low
+						},
 						[
-							{
-								"title": "Low",
-								"type": "number",
-								"increments": [
-									-1,
-									1
-								],
-								"id": "tsrl" // teleop scored rendezvous low
-							},
 							{
 								"title": "High",
 								"type": "number",
@@ -1051,7 +1437,16 @@ function returnDataMap() {
 									-1,
 									1
 								],
-								"id": "tsrh" // teleop scored rendezvous high
+								"id": "tsro" // teleop scored rendezvous outer
+							},
+							{
+								"title": "Inner",
+								"type": "number",
+								"increments": [
+									-1,
+									1
+								],
+								"id": "tsri" // teleop scored rendezvous inner
 							},
 						],
 
@@ -1059,24 +1454,33 @@ function returnDataMap() {
 							"title": "Behind the rendezvous",
 							"type": "text",
 						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "tsbrl" // teleop scored behind rendezvous low
+						},
 						[
 							{
-								"title": "Low",
+								"title": "Outer",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tsbrl" // teleop scored behind rendezvous low
+								"id": "tsbro" // teleop scored behind rendezvous outer
 							},
 							{
-								"title": "High",
+								"title": "Inner",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tsbrh" // teleop scored behind rendezvous high
+								"id": "tsbri" // teleop scored behind rendezvous inner
 							},
 						],
 
@@ -1084,24 +1488,33 @@ function returnDataMap() {
 							"title": "In front of the rendezvous",
 							"type": "text",
 						},
+						{
+							"title": "Low",
+							"type": "number",
+							"increments": [
+								-1,
+								1
+							],
+							"id": "tsfrl" // teleop scored front rendezvous low
+						},
 						[
 							{
-								"title": "Low",
+								"title": "Outer",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tsfrl" // teleop scored front rendezvous low
+								"id": "tsfro" // teleop scored front rendezvous outer
 							},
 							{
-								"title": "High",
+								"title": "Inner",
 								"type": "number",
 								"increments": [
 									-1,
 									1
 								],
-								"id": "tsfrh" // teleop scored front rendezvous high
+								"id": "tsfri" // teleop scored front rendezvous inner
 							},
 						],
 
@@ -1254,7 +1667,7 @@ function returnDataMap() {
 			]
 		}
 	}
-	
+
 	return dataMap;
 }
 
