@@ -723,7 +723,7 @@ function returnDataMap() {
 									-1,
 									1
 								],
-								"id": "asfti" // auto scored far trench outer
+								"id": "asfto" // auto scored far trench outer
 							},
 							{
 								"title": "Inner",
@@ -757,7 +757,7 @@ function returnDataMap() {
 									-1,
 									1
 								],
-								"id": "ascoti" // auto scored close opponent trench outer
+								"id": "ascoto" // auto scored close opponent trench outer
 							},
 							{
 								"title": "Inner",
@@ -791,7 +791,7 @@ function returnDataMap() {
 									-1,
 									1
 								],
-								"id": "asfoti" // auto scored far opponent trench outer
+								"id": "asfoto" // auto scored far opponent trench outer
 							},
 							{
 								"title": "Inner",
