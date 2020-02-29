@@ -936,6 +936,24 @@ function returnDataMap() {
 							"id": "arft" // auto refuel far trench 
 						},
 						{
+							"title": "Close side of OPPONENT trench",
+							"type": "toggle",
+							"options": [
+								"No",
+								"Yes"
+							],
+							"id": "arcot" // auto refuel close opposing trench
+						},
+						{
+							"title": "Far side of OPPONENT trench",
+							"type": "toggle",
+							"options": [
+								"No",
+								"Yes"
+							],
+							"id": "arfot" // auto refuel far opposing trench
+						},
+						{
 							"title": "Rendezvous",
 							"type": "toggle",
 							"options": [

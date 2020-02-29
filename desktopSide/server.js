@@ -23,6 +23,8 @@ function jsonToCSV(json) {
 		"aml",
 		"arct",
 		"arft",
+		"arcot",
+		"arfot",
 		"arr",
 		"arp",
 		"trg",
@@ -43,7 +45,7 @@ function jsonToCSV(json) {
 		console.log("match is", match)
 		let entries = Object.entries(match)
 
-		output += match.teamNumber + ',' + match.matchNumber + ','
+		output += match.teamNumber + ',,' + match.matchNumber + ','
 		
 		for (let en in entries) {
 			e = entries[en]
