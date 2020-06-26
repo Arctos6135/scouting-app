@@ -5,6 +5,7 @@ import QRCode from 'react-native-qrcode-svg';
 import * as dataMap from './dataMap'
 import { Buffer } from 'buffer';
 import { DataMap } from './dataEntry'
+var lz = require('lz-string')
 
 const formTypeBits = 4;
 
@@ -18,7 +19,7 @@ function getBits(component) {
 	else if (component.type == 'toggle') {
 		range = 1;
 	}
-	else if (component.id) range = 255;
+	else if (component.id) range = 63;
 	else range = 0;
 	return Math.floor(Math.log2(range)) + 1;
 }
@@ -73,11 +74,12 @@ function generateQRCode(allData, bitmaps, forms) {
 	for (let i in allData) {
 		if (!allData[i].deleted) data.push(allData[i]);
 	}
-	let output = String.fromCharCode(data.length);
+	let output = String.fromCharCode(data.length); 
 	for (let i in data) {
 		output += generateBuffer(data[i], bitmaps, data[i].formType, forms);
 	}
 	console.log(output);
+	console.log("the length of output is: ", output.length)
 	return output;
 }
 function getBitLength(bitmap) {
@@ -98,6 +100,7 @@ function getFormNameFromID(formID, forms) {
 			break;
 		}
 	}
+	if (!allData[i].deleted) data.push(allData[i]);
 	if (!name) throw new Error("Form type " + formID + " doesn't exist")
 	return name
 }
