@@ -5,7 +5,6 @@ import QRCode from 'react-native-qrcode-svg';
 import * as dataMap from './dataMap'
 import { Buffer } from 'buffer';
 import { DataMap } from './dataEntry'
-var lz = require('lz-string')
 
 const formTypeBits = 4;
 
@@ -100,7 +99,6 @@ function getFormNameFromID(formID, forms) {
 			break;
 		}
 	}
-	if (!allData[i].deleted) data.push(allData[i]);
 	if (!name) throw new Error("Form type " + formID + " doesn't exist")
 	return name
 }
