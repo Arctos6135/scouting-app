@@ -68,7 +68,7 @@ export const popupStyles = {
 	}
 }
 
-import { NetInfo } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import returnDataMap from './localDataMap';
 
 
@@ -148,7 +148,7 @@ export class SetupPopup extends React.Component {
 			connected: false,
 			log: "Checking for internet connection\n"
 		}
-		NetInfo.getConnectionInfo().then(state => {
+		NetInfo.fetch().then(state => {
 			console.log(state);
 			if (state.type != 'none') {
 				this.setState({ log: this.state.log + 'Connected\n', connected: true });
