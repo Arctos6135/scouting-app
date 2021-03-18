@@ -1,9 +1,12 @@
 {
 	"compilerOptions": {
+		"moduleResolution": "node",
+		"jsx": "react",
 		"noImplicitAny": true,
 		"lib": ["ES2020"],
 		"strict": true,
 		"outDir": "dist",
+		"rootDir": ".",
 		"target": "ESNext"
 	}
 }
