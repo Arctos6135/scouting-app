@@ -6,8 +6,8 @@ export default class TextComponent extends FormComponent {
 	public readonly allowedChars: string[];
 	public readonly base: bigint;
 
-	constructor(title: string, public maxLength: number, allowedChars: string, id: string) {
-		super(title, id);
+	constructor(public readonly maxLength: number, allowedChars: string) {
+		super();
 		this.charValues = {};
 		let c = 0n;
 		this.allowedChars = [];
@@ -19,11 +19,12 @@ export default class TextComponent extends FormComponent {
 		}
 		this.base = c;
 	}
-	depth() { return 2; }
-	maxValue(depth?: number) {
-		if (depth == 1) return this.base;
-		return BigInt(this.maxLength);
+
+	// TODO: Fix size calculation for text
+	calculateSize(length: number) {
+		return this.base ** BigInt(length) * BigInt(this.maxLength) + BigInt(this.maxLength - 1);
 	}
+
 	testValue(value: FormData) {
 		if (typeof value != 'string') return false
 		if (value.length >= this.maxLength) return false;
@@ -33,21 +34,35 @@ export default class TextComponent extends FormComponent {
 		return true;
 	}
 
-	_encodeValue(value: FormData) {
+	_encodeValue(value: string) {
 		// Value will always be a string because encodeValue only gets called after testValue returns true, but typescript needs to know that it is guaranteed to be a string.
-		if (typeof value != 'string') return [0n, 0n];
+		if (typeof value != 'string') return {encoded: 0n, size: 0n};
 		let cursor = 1n;
 		let encoding = 0n;
-		for (let i = value.length - 1; i >= 0; i++) {
+		for (let i = 0; i < value.length; i++) {
 			encoding += cursor * this.charValues[value[i]];
 			cursor *= this.base;
 		}
 
-		return [BigInt(value.length), encoding];
+		return { 
+			encoded: BigInt(value.length) + encoding * BigInt(this.maxLength), 
+			size: this.calculateSize(value.length)
+		};
 	}
 
-	_decodeValue(value: bigint, level: number) {
-		if (level == 0) return value;
-		else return this.allowedChars[Number(value)];
+	_decodeValue(value: bigint) {
+		const length = value % BigInt(this.maxLength);
+		value /= BigInt(this.maxLength);
+		let out = '';
+		
+		let i: bigint = 0n;
+		while (length - (i++)) {
+			out += this.allowedChars[Number(value % this.base)];
+			value /= this.base;
+		}
+		return { 
+			data: out, 
+			size: this.calculateSize(Number(length))
+		}
 	}
 }
