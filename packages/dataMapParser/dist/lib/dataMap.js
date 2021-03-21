@@ -1,2 +1,1 @@
-export class DataMap {
-}
+"use strict";

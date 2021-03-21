@@ -1,12 +1,17 @@
 {
 	"compilerOptions": {
 		"moduleResolution": "node",
+		"module": "CommonJS",
 		"jsx": "react",
 		"noImplicitAny": true,
 		"lib": ["ES2020"],
 		"strict": true,
 		"outDir": "dist",
 		"rootDir": ".",
-		"target": "ESNext"
+		"target": "ESNext",
+		"baseUrl": ".",
+		"paths": {
+			"@components": ["./lib/formComponents.ts"]
+		}
 	}
 }
