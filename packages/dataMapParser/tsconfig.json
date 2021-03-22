@@ -6,7 +6,7 @@
 		"noImplicitAny": true,
 		"lib": ["ES2020"],
 		"strict": true,
-		"outDir": "dist",
+		"outDir": "build",
 		"rootDir": ".",
 		"target": "ESNext",
 		"baseUrl": ".",
