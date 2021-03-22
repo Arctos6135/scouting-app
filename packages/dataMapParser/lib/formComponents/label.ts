@@ -2,15 +2,15 @@ import { FormComponent } from './formComponent';
 
 export default class LabelComponent extends FormComponent {
 	readonly type: string = "formLabel";
+
 	testValue(value: string) {
 		return value == '';
 	}
-	_encodeValue(value: string) {
+	_encodeValue() {
 		return {encoded: 0n, size: 0n};
 	}
-	_decodeValue(value: bigint) {
+	_decodeValue() {
 		return {data: '', size: 0n};
 	}
 
 }
-

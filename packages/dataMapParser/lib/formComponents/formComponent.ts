@@ -1,10 +1,6 @@
 export type FormData = string | { [id: string]: FormData } | FormData[];
 
 export abstract class FormComponent {
-	growWidth?: number;
-
-	constructor() {}
-
 	abstract readonly type: string;
 	abstract testValue(value: FormData): boolean;
 
