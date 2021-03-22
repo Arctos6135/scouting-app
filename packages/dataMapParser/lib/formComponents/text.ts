@@ -20,9 +20,8 @@ export default class TextComponent extends FormComponent {
 		this.base = c;
 	}
 
-	// TODO: Fix size calculation for text
 	calculateSize(length: number) {
-		return this.base ** BigInt(length) * BigInt(this.maxLength) + BigInt(this.maxLength - 1);
+		return (this.base ** BigInt(length) - 1n) * BigInt(this.maxLength) + BigInt(this.maxLength);
 	}
 
 	testValue(value: FormData) {
