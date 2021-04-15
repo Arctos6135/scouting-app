@@ -1,5 +1,10 @@
 # scouting-app
-This is the app used for scouting. It's written in react native using expo.
+This app was created for high school robotics teams to enter competitive scouting data at First Robotics Competitions. Because WiFi is not permitted it uses QR codes to transmit data from phones to the database. It's written in React Native so it runs on any platform.
+
+# How it works
+This repository contains two components. The phone app for entering data, and the desktop app for reading QR codes and storing the data.
+
+The app uses a schema to generate the forms that are displayed to users. If we simply transfered the entered data in a JSON format the QR codes would be too large to read reliably. In order to prevent this we have two solutions. One solution is to just use multiple QR codes. This allows any amount of data to be transfered but it can take longer. The other way is to pack the data as efficiently as possible. We do this by treating the form schema as a series of bases, each one representing the number of possible inputs for that value, and encoding this as a mixed-radix number. This means each possible state of the form has a unique number and we just need to send that. Strings are encoded with their length so we don't waste space with blank characters.
 
 # Installation
 Make sure you have a new version of `nodejs` and `npm` installed. In order to test the app you must install a few libraries. Start by installing `expo-cli` with
