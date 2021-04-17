@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "ecstatic": "^3.3.1",
+    "ecstatic": "^4.1.4",
     "express": "^4.16.4",
     "fuse-box": "^3.7.1",
     "opn": "^5.4.0",
